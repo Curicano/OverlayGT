@@ -236,7 +236,7 @@ class MyWidget(QtWidgets.QMainWindow):
     def check_upd(self):
         self.sh(self)
         webbrowser.open(
-            "https://github.com/Curicano/OverlayGT 2.0", new=0, autoraise=True)
+            "https://github.com/Curicano/OverlayGT-2.0", new=0, autoraise=True)
 
     def resource_path(self, relative_path):
         # Получаем абсолютный путь к ресурсам.
@@ -341,4 +341,3 @@ if __name__ == "__main__":
             case _:
                 prestart(1)
                 break
- 
