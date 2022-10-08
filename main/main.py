@@ -227,7 +227,12 @@ class MyWidget(QtWidgets.QMainWindow):
         self.ui.l_time.setText(time.toString("hh : mm"))
 
     def set_back_img(self, path):
-        self.ui.l_back_img.setPixmap(QtGui.QPixmap(path))
+        ext = os.path.splitext(path)
+        if ext[1] == ".gif":
+            self.ui.l_back_img.setMovie(QtGui.QMovie(path))
+            self.ui.l_back_img.movie().start()
+        else:
+            self.ui.l_back_img.setPixmap(QtGui.QPixmap(path))
 
     def set_blur_img(self, value):
         self.blur_eff.setBlurRadius(value)
@@ -236,7 +241,7 @@ class MyWidget(QtWidgets.QMainWindow):
     def check_upd(self):
         self.sh(self)
         webbrowser.open(
-            "https://github.com/Curicano/OverlayGT 2.0", new=0, autoraise=True)
+            "https://github.com/Curicano/OverlayGT-2.0", new=0, autoraise=True)
 
     def resource_path(self, relative_path):
         # Получаем абсолютный путь к ресурсам.
@@ -341,4 +346,3 @@ if __name__ == "__main__":
             case _:
                 prestart(1)
                 break
- 

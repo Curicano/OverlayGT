@@ -15,7 +15,6 @@ class AudioWidget(QtWidgets.QFrame):
                             QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.fonts = QtGui.QFont("Biennale Black", 10)
         self._old_pos = None
-
     def showEvent(self, a0: QtGui.QShowEvent):
         self.volume_start()
         return super().showEvent(a0)
@@ -31,6 +30,16 @@ class AudioWidget(QtWidgets.QFrame):
     def mouseReleaseEvent(self, event):
         if event.button() == QtCore.Qt.LeftButton:
             self._old_pos = None
+            px, py = self.pos().x(), self.pos().y()
+            sx, sy = self.size().width(), self.size().height()
+            if px + sx > 1920:
+                self.move(1920-sx, py)
+            elif px < 0:
+                self.move(0, self.pos().y())
+            if py + sy > 1080:
+                self.move(px, 1080-sy)
+            elif py < 0:
+                self.move(self.pos().x(), 0)
 
     def mouseMoveEvent(self, event):
         if not self._old_pos:

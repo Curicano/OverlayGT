@@ -15,8 +15,6 @@ class Ui_TranslitWidget(object):
     def setupUi(self, TranslitWidget):
         TranslitWidget.setObjectName("TranslitWidget")
         TranslitWidget.resize(505, 255)
-        TranslitWidget.setMinimumSize(QtCore.QSize(505, 255))
-        TranslitWidget.setMaximumSize(QtCore.QSize(505, 255))
         self.btn_swap_lang = QtWidgets.QPushButton(TranslitWidget)
         self.btn_swap_lang.setGeometry(QtCore.QRect(240, 27, 25, 25))
         self.btn_swap_lang.setMinimumSize(QtCore.QSize(25, 25))

@@ -15,8 +15,6 @@ class Ui_AudioWidget(object):
     def setupUi(self, AudioWidget):
         AudioWidget.setObjectName("AudioWidget")
         AudioWidget.resize(320, 420)
-        AudioWidget.setMinimumSize(QtCore.QSize(320, 420))
-        AudioWidget.setMaximumSize(QtCore.QSize(320, 420))
         self.f_title = QtWidgets.QFrame(AudioWidget)
         self.f_title.setGeometry(QtCore.QRect(0, 0, 320, 22))
         self.f_title.setObjectName("f_title")

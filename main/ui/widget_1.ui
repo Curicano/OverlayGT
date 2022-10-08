@@ -10,18 +10,6 @@
     <height>255</height>
    </rect>
   </property>
-  <property name="minimumSize">
-   <size>
-    <width>505</width>
-    <height>255</height>
-   </size>
-  </property>
-  <property name="maximumSize">
-   <size>
-    <width>505</width>
-    <height>255</height>
-   </size>
-  </property>
   <widget class="QPushButton" name="btn_swap_lang">
    <property name="geometry">
     <rect>

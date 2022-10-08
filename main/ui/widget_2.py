@@ -15,8 +15,6 @@ class Ui_SettingsWidget(object):
     def setupUi(self, SettingsWidget):
         SettingsWidget.setObjectName("SettingsWidget")
         SettingsWidget.resize(480, 340)
-        SettingsWidget.setMinimumSize(QtCore.QSize(480, 340))
-        SettingsWidget.setMaximumSize(QtCore.QSize(480, 340))
         self._2 = QtWidgets.QVBoxLayout(SettingsWidget)
         self._2.setContentsMargins(0, 0, 0, 0)
         self._2.setSpacing(0)

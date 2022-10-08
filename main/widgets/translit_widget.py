@@ -67,6 +67,16 @@ class TranslitWidget(QtWidgets.QFrame):
     def mouseReleaseEvent(self, event):
         if event.button() == QtCore.Qt.LeftButton:
             self._old_pos = None
+            px, py = self.pos().x(), self.pos().y()
+            sx, sy = self.size().width(), self.size().height()
+            if px < 0:
+                self.move(0, self.pos().y())
+            elif px + sx > 1920:
+                self.move(1920-sx, py)
+            if py < 0:
+                self.move(self.pos().x(), 0)
+            elif py + sy > 1080:
+                self.move(px, 1080-sy)
 
     def mouseMoveEvent(self, event):
         if not self._old_pos:
