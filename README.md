@@ -1,4 +1,4 @@
-# OverlayGT 2.0)
+# OverlayGT)
 Supported on Windows 10/11
 ***
 Log
