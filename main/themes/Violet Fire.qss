@@ -1,7 +1,7 @@
 #f_main {
     background-color: rgba(0, 0, 0, 150);
 }
-#f_menu, #AudioWidget, #line, #sAWC, #MusicWidget, #SettingsWidget, #TranslitWidget, #tE_1, #tE_2 {
+#f_menu, #AudioWidget, #line, #MusicWidget, #SettingsWidget, #TranslitWidget, #tE_1, #tE_2 {
     background-color: rgb(30, 30, 30);
     border: 1px solid qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(134, 0, 255, 255), stop:1 rgba(255, 151, 1, 255));
 }
@@ -127,4 +127,15 @@ QScrollBar::sub-line:vertical {
 }
 QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
 	background: none;
+}
+#sA, #sAWC {
+	background: transparent;
+	border: none;
+}
+#f_title, #f_speakers {
+	border: 1px solid;
+	border-bottom-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(134, 0, 255, 255), stop:1 rgba(255, 151, 1, 255));
+	border-right: none;
+	border-left: none;
+	border-top:none;
 }

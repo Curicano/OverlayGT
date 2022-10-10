@@ -9,7 +9,7 @@ class V(AudioUtilities):
         super().__init__()
 
     def get_speakers(self):
-        self.devices = AudioUtilities.GetSpeakers()
+        self.devices = self.GetSpeakers()
         self.interface = self.devices.Activate(
             IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
         self.volume = cast(self.interface, POINTER(IAudioEndpointVolume))

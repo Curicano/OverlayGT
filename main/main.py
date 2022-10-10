@@ -35,15 +35,6 @@ class Crypter():
         os.remove(file)
 
 
-class Thread(QtCore.QThread):
-    def __init__(self, parent):
-        super().__init__()
-        self.parent = parent
-
-    def run(self):
-        return super().run()
-
-
 class HotKey(QtCore.QObject):
     sh = QtCore.pyqtSignal()
 
@@ -68,8 +59,6 @@ class MyWidget(QtWidgets.QMainWindow):
                             QtGui.QIcon.Normal, QtGui.QIcon.On)
         self.path_to_themes = self.resource_path(
             "Git\\OverlayGT 2.0\\main\\themes")
-        #self.thr = Thread(self)
-        #self.thr.start()
         self.rebuilder()
         self.connections()
         self.timer.start(100)

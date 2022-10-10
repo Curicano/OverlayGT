@@ -28,10 +28,16 @@
    </property>
    <item>
     <widget class="QFrame" name="f_title">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>25</height>
+      </size>
+     </property>
      <property name="maximumSize">
       <size>
        <width>16777215</width>
-       <height>30</height>
+       <height>25</height>
       </size>
      </property>
      <layout class="QHBoxLayout" name="_3">
@@ -39,23 +45,29 @@
        <number>10</number>
       </property>
       <property name="leftMargin">
-       <number>1</number>
+       <number>3</number>
       </property>
       <property name="topMargin">
-       <number>1</number>
+       <number>3</number>
       </property>
       <property name="rightMargin">
-       <number>1</number>
+       <number>3</number>
       </property>
       <property name="bottomMargin">
-       <number>1</number>
+       <number>3</number>
       </property>
       <item>
        <widget class="QLabel" name="l_icon_title">
+        <property name="minimumSize">
+         <size>
+          <width>19</width>
+          <height>19</height>
+         </size>
+        </property>
         <property name="maximumSize">
          <size>
-          <width>20</width>
-          <height>20</height>
+          <width>19</width>
+          <height>19</height>
          </size>
         </property>
         <property name="pixmap">
@@ -83,16 +95,10 @@
       </item>
       <item>
        <widget class="QPushButton" name="btn_hide">
-        <property name="minimumSize">
-         <size>
-          <width>20</width>
-          <height>20</height>
-         </size>
-        </property>
         <property name="maximumSize">
          <size>
-          <width>20</width>
-          <height>20</height>
+          <width>19</width>
+          <height>16777215</height>
          </size>
         </property>
         <property name="icon">

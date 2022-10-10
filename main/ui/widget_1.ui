@@ -14,7 +14,7 @@
    <property name="geometry">
     <rect>
      <x>240</x>
-     <y>27</y>
+     <y>30</y>
      <width>25</width>
      <height>25</height>
     </rect>
@@ -55,7 +55,7 @@
    <property name="geometry">
     <rect>
      <x>5</x>
-     <y>27</y>
+     <y>30</y>
      <width>225</width>
      <height>18</height>
     </rect>
@@ -71,7 +71,7 @@
    <property name="geometry">
     <rect>
      <x>240</x>
-     <y>137</y>
+     <y>140</y>
      <width>25</width>
      <height>25</height>
     </rect>
@@ -106,9 +106,9 @@
    <property name="geometry">
     <rect>
      <x>275</x>
-     <y>52</y>
+     <y>55</y>
      <width>225</width>
-     <height>198</height>
+     <height>195</height>
     </rect>
    </property>
    <property name="contextMenuPolicy">
@@ -125,7 +125,7 @@
    <property name="geometry">
     <rect>
      <x>275</x>
-     <y>27</y>
+     <y>30</y>
      <width>225</width>
      <height>18</height>
     </rect>
@@ -141,9 +141,9 @@
    <property name="geometry">
     <rect>
      <x>5</x>
-     <y>52</y>
+     <y>55</y>
      <width>225</width>
-     <height>198</height>
+     <height>195</height>
     </rect>
    </property>
    <property name="contextMenuPolicy">
@@ -159,7 +159,7 @@
      <x>0</x>
      <y>0</y>
      <width>505</width>
-     <height>22</height>
+     <height>25</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout">
@@ -167,23 +167,29 @@
      <number>10</number>
     </property>
     <property name="leftMargin">
-     <number>1</number>
+     <number>3</number>
     </property>
     <property name="topMargin">
-     <number>1</number>
+     <number>3</number>
     </property>
     <property name="rightMargin">
-     <number>1</number>
+     <number>3</number>
     </property>
     <property name="bottomMargin">
-     <number>1</number>
+     <number>3</number>
     </property>
     <item>
      <widget class="QLabel" name="l_icon_title">
+      <property name="minimumSize">
+       <size>
+        <width>19</width>
+        <height>19</height>
+       </size>
+      </property>
       <property name="maximumSize">
        <size>
-        <width>20</width>
-        <height>16777215</height>
+        <width>19</width>
+        <height>19</height>
        </size>
       </property>
       <property name="pixmap">
@@ -211,16 +217,10 @@
     </item>
     <item>
      <widget class="QPushButton" name="btn_hide">
-      <property name="minimumSize">
-       <size>
-        <width>20</width>
-        <height>20</height>
-       </size>
-      </property>
       <property name="maximumSize">
        <size>
-        <width>20</width>
-        <height>20</height>
+        <width>19</width>
+        <height>16777215</height>
        </size>
       </property>
       <property name="icon">
