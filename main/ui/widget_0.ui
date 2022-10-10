@@ -242,6 +242,12 @@
      <height>335</height>
     </rect>
    </property>
+   <property name="verticalScrollBarPolicy">
+    <enum>Qt::ScrollBarAlwaysOn</enum>
+   </property>
+   <property name="horizontalScrollBarPolicy">
+    <enum>Qt::ScrollBarAlwaysOff</enum>
+   </property>
    <property name="widgetResizable">
     <bool>true</bool>
    </property>
@@ -250,7 +256,7 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>318</width>
+      <width>301</width>
       <height>333</height>
      </rect>
     </property>
