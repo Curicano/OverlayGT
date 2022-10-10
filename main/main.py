@@ -11,7 +11,7 @@ from volume_control import V
 import webbrowser
 from keyboard import add_hotkey
 import win32api
-VERSION = "0.0.0.1"
+VERSION = "0.0.0.2"
 NAME = "OverlayGT"
 s = 0
 
@@ -312,7 +312,7 @@ if __name__ == "__main__":
                 # check_clone()
                 start()
     Reg = OpenKeyEx(HKEY_LOCAL_MACHINE,
-                    r'SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\OverlayGT 2.0.exe', 0, KEY_READ)
+                    r'SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\OverlayGT.exe', 0, KEY_READ)
     path = QueryValue(Reg, "")
     path = f"{os.path.dirname(os.path.abspath(path))}\\settings"
     #path = r"D:\Storage X\About\Programirovanie\Python\Git\OverlayGT 2.0\main\settings"
