@@ -1,12 +1,3 @@
 # OverlayGT)
 Supported on Windows 10/11
-***
-Log
->v0.0.0.2
->>- Now widgets cannot be moved beyond the edges of the screen.
->>- Fixed the "audio" button.
->>- Added the ability to install gifs on the background.
->
->v0.0.0.1
->>- Release
-***
+![изображение](https://user-images.githubusercontent.com/95356567/195140678-58883846-c2e1-4ea9-98cf-a1e2535e3adb.png)
