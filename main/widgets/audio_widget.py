@@ -1,6 +1,5 @@
 from PyQt5 import QtCore, QtWidgets, QtGui
 from ui.widget_0 import Ui_AudioWidget
-from PyQt5.QtCore import pyqtSignal, pyqtSlot
 from volume_control import V
 from image import res
 
@@ -22,7 +21,7 @@ class AudioWidget(QtWidgets.QFrame):
         return super().showEvent(a0)
 
     def hideEvent(self, a0: QtGui.QHideEvent):
-        self.remove_item()
+        self.clear_layout(self.ui.sAWC.layout())
         return super().hideEvent(a0)
 
     def mousePressEvent(self, event):
@@ -50,7 +49,6 @@ class AudioWidget(QtWidgets.QFrame):
         delta = event.pos() - self._old_pos
         self.move(self.pos() + delta)
 
-    @pyqtSlot()
     def volume_start(self):
         value = self.volume_control.get_volume_speakers()
         self.ui.hS.setValue(value)
@@ -59,16 +57,16 @@ class AudioWidget(QtWidgets.QFrame):
             self.volume_control.set_volume_speakers)
         self.ui.btn_mute.clicked.connect(
             lambda: self.ui.hS.setValue(0))
-        f_session = QtWidgets.QFrame()
-        #f_session.resize(320, 60)
-        #f_session.setMaximumSize(320, 60)
-        #f_session.setMaximumSize(320, 60)
-        gL = QtWidgets.QGridLayout(f_session)
-        gL.setSpacing(5)
-        gL.setContentsMargins(0, 0, 0, 0)
         l = 0
         for session in self.volume_control.get_sessions():
             if session.Process and session.Process.name():
+                f_session = QtWidgets.QFrame()
+                f_session.setObjectName(f"frame({session.Process.name()})")
+                gL = QtWidgets.QGridLayout(f_session)
+                gL.setSpacing(5)
+                gL.setContentsMargins(0, 0, 0, 0)
+                gL.setObjectName(f"gridLayout({session.Process.name()})")
+
                 value = self.volume_control.get_volume_session(
                     session.Process.name())
                 l_num = QtWidgets.QLabel()
@@ -76,10 +74,10 @@ class AudioWidget(QtWidgets.QFrame):
                 l_num.setMaximumSize(20, 20)
                 l_num.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
                 l_num.setNum(value)
-                l_num.setObjectName(str(session.Process.name()))
+                l_num.setObjectName(f"label_Num({str(session.Process.name())})")
                 hS = QtWidgets.QSlider()
                 hS.setMinimumWidth(243)
-                hS.setObjectName(str(session.Process.name()))
+                hS.setObjectName(f"horizontalSlider({str(session.Process.name())})")
                 hS.setOrientation(QtCore.Qt.Horizontal)
                 hS.setMaximum(100)
                 hS.setPageStep(10)
@@ -91,43 +89,48 @@ class AudioWidget(QtWidgets.QFrame):
                 btn_mute = QtWidgets.QPushButton()
                 btn_mute.setMinimumSize(20, 20)
                 btn_mute.setMaximumSize(20, 20)
-                btn_mute.setObjectName(str(session.Process.name()))
+                btn_mute.setObjectName(
+                    f"pushButton_Mute({str(session.Process.name())})")
                 btn_mute.setIcon(self.icon)
                 btn_mute.setIconSize(QtCore.QSize(20, 20))
                 btn_mute.clicked.connect(
                     lambda vol, name=hS.objectName(): self.test(vol, name))
                 l_title = QtWidgets.QLabel()
+                l_title.setObjectName(
+                    f"label_Name({str(session.Process.name())})")
                 l_title.setMinimumHeight(20)
                 l_title.setMaximumHeight(20)
                 l_title.setText((session.Process.name()).strip().replace(
                     ".exe", "").capitalize())
                 l_title.setMinimumHeight(30)
                 l_title.setFont(self.fonts)
-                space = QtWidgets.QSpacerItem(
-                    20, 317, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
                 gL.addWidget(l_title, l, 1)
                 gL.addWidget(hS, l+1, 1)
                 gL.addWidget(l_num, l+1, 2)
                 gL.addWidget(btn_mute, l+1, 0)
                 self.ui.vL.addWidget(f_session)
                 l += 2
-        #print(self.ui.sAWC.findChildren(QtWidgets.QLabel))
+        #space = QtWidgets.QSpacerItem(
+        #    20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        #self.ui.vL.addItem(space)
         if self.ui.sAWC.findChildren(QtWidgets.QGridLayout) != []:
-            self.ui.vL.addSpacerItem(space)
+            space = QtWidgets.QSpacerItem(
+                20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+            self.ui.vL.addItem(space)
 
-    @pyqtSlot()
     def test2(self, value, name):
-        slider = []
-        label = []
+        sliders = []
+        labels = []
         for children in self.ui.sA.findChildren(QtWidgets.QLabel):
-            label.append(children)
+            labels.append(children)
         for children1 in self.ui.sA.findChildren(QtWidgets.QSlider):
-            slider.append(children1)
-        for i in range(label.__len__()):
-            if label[i].objectName() == name:
-                label[i].setNum(value)
+            sliders.append(children1)
+        for slide in sliders:
+            for label in labels:
+                if slide.objectName() == label.objectName() == name:
+                    slide.setValue(value)
+                    label.setNum(value)
 
-    @pyqtSlot()
     def test(self, value, name):
         slider = []
         btn = []
@@ -139,10 +142,12 @@ class AudioWidget(QtWidgets.QFrame):
             if btn[i].objectName() == name:
                 slider[i].setValue(0)
 
-    @pyqtSlot()
-    def remove_item(self):
-        for children in self.ui.sAWC.findChildren((QtWidgets.QGridLayout, QtWidgets.QSlider, QtWidgets.QLabel, QtWidgets.QPushButton, QtWidgets.QFrame)):
-            try:
-                children.deleteLater()
-            except:
-                pass
+    def clear_layout(self, layout):
+        if layout is not None:
+            while layout.count():
+                item = layout.takeAt(0)
+                widget = item.widget()
+                if widget is not None:
+                    widget.deleteLater()
+                else:
+                    self.clear_layout(item.layout())
