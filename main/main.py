@@ -221,7 +221,7 @@ class MyWidget(QtWidgets.QMainWindow):
             self.ui.l_back_img.setMovie(QtGui.QMovie(path))
             self.ui.l_back_img.movie().start()
         else:
-            self.ui.l_back_img.setPixmap(QtGui.QPixmap(path))
+            self.ui.l_back_img.setPixmap(QtGui.QPixmap(path, ))
 
     def set_blur_img(self, value):
         self.blur_eff.setBlurRadius(value)
@@ -314,6 +314,7 @@ if __name__ == "__main__":
     Reg = OpenKeyEx(HKEY_LOCAL_MACHINE,
                     r'SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\OverlayGT.exe', 0, KEY_READ)
     path = QueryValue(Reg, "")
+    Reg.Close()
     path = f"{os.path.dirname(os.path.abspath(path))}\\settings"
     #path = r"D:\Storage X\About\Programirovanie\Python\Git\OverlayGT 2.0\main\settings"
     deen = Crypter()
@@ -331,7 +332,7 @@ if __name__ == "__main__":
                     break
             case "-HDPI":
                 QtWidgets.QApplication.setAttribute(
-                    QtCore.Qt.AA_EnableHighDpiScaling)
+                    QtCore.Qt.ApplicationAttribute.AA_EnableHighDpiScaling)
             case _:
                 prestart(1)
                 break
