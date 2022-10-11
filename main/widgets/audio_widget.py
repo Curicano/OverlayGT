@@ -110,9 +110,6 @@ class AudioWidget(QtWidgets.QFrame):
                 gL.addWidget(btn_mute, l+1, 0)
                 self.ui.vL.addWidget(f_session)
                 l += 2
-        #space = QtWidgets.QSpacerItem(
-        #    20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        #self.ui.vL.addItem(space)
         if self.ui.sAWC.findChildren(QtWidgets.QGridLayout) != []:
             space = QtWidgets.QSpacerItem(
                 20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
