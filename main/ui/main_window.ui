@@ -204,8 +204,8 @@
    <widget class="AudioWidget" name="AudioWidget">
     <property name="geometry">
      <rect>
-      <x>390</x>
-      <y>460</y>
+      <x>102</x>
+      <y>196</y>
       <width>320</width>
       <height>420</height>
      </rect>
@@ -214,8 +214,8 @@
    <widget class="TranslitWidget" name="TranslitWidget">
     <property name="geometry">
      <rect>
-      <x>460</x>
-      <y>200</y>
+      <x>1216</x>
+      <y>260</y>
       <width>505</width>
       <height>255</height>
      </rect>
@@ -224,8 +224,8 @@
    <widget class="SettingsWidget" name="SettingsWidget">
     <property name="geometry">
      <rect>
-      <x>1090</x>
-      <y>480</y>
+      <x>682</x>
+      <y>298</y>
       <width>480</width>
       <height>340</height>
      </rect>

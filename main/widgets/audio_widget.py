@@ -74,10 +74,10 @@ class AudioWidget(QtWidgets.QFrame):
                 l_num.setMaximumSize(20, 20)
                 l_num.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
                 l_num.setNum(value)
-                l_num.setObjectName(f"label_Num({str(session.Process.name())})")
+                l_num.setObjectName(str(session.Process.name()))
                 hS = QtWidgets.QSlider()
                 hS.setMinimumWidth(243)
-                hS.setObjectName(f"horizontalSlider({str(session.Process.name())})")
+                hS.setObjectName(str(session.Process.name()))
                 hS.setOrientation(QtCore.Qt.Horizontal)
                 hS.setMaximum(100)
                 hS.setPageStep(10)
@@ -85,19 +85,16 @@ class AudioWidget(QtWidgets.QFrame):
                 hS.valueChanged.connect(
                     lambda vol, name=hS.objectName(): self.volume_control.set_volume_sessions(vol, name))
                 hS.valueChanged.connect(
-                    lambda vol, name=hS.objectName(): self.test2(vol, name))
+                    lambda vol, name=hS.objectName(): self.setValue(vol, name))
                 btn_mute = QtWidgets.QPushButton()
                 btn_mute.setMinimumSize(20, 20)
                 btn_mute.setMaximumSize(20, 20)
-                btn_mute.setObjectName(
-                    f"pushButton_Mute({str(session.Process.name())})")
+                btn_mute.setObjectName(str(session.Process.name()))
                 btn_mute.setIcon(self.icon)
                 btn_mute.setIconSize(QtCore.QSize(20, 20))
                 btn_mute.clicked.connect(
-                    lambda vol, name=hS.objectName(): self.test(vol, name))
+                    lambda vol, name=hS.objectName(): self.mute(vol, name))
                 l_title = QtWidgets.QLabel()
-                l_title.setObjectName(
-                    f"label_Name({str(session.Process.name())})")
                 l_title.setMinimumHeight(20)
                 l_title.setMaximumHeight(20)
                 l_title.setText((session.Process.name()).strip().replace(
@@ -115,29 +112,30 @@ class AudioWidget(QtWidgets.QFrame):
                 20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
             self.ui.vL.addItem(space)
 
-    def test2(self, value, name):
+    def setValue(self, value, name):
         sliders = []
         labels = []
         for children in self.ui.sA.findChildren(QtWidgets.QLabel):
-            labels.append(children)
+            if children.objectName():
+                labels.append(children)
         for children1 in self.ui.sA.findChildren(QtWidgets.QSlider):
             sliders.append(children1)
         for slide in sliders:
             for label in labels:
-                if slide.objectName() == label.objectName() == name:
-                    slide.setValue(value)
+                if slide.objectName() == label.objectName()== name:
                     label.setNum(value)
 
-    def test(self, value, name):
-        slider = []
-        btn = []
+    def mute(self, value, name):
+        sliders = []
+        buttons = []
         for children in self.ui.sA.findChildren(QtWidgets.QPushButton):
-            btn.append(children)
+            buttons.append(children)
         for children1 in self.ui.sA.findChildren(QtWidgets.QSlider):
-            slider.append(children1)
-        for i in range(slider.__len__()):
-            if btn[i].objectName() == name:
-                slider[i].setValue(0)
+            sliders.append(children1)
+        for btn in buttons:
+            for slide in sliders:
+                if slide.objectName() == btn.objectName() == name:
+                    slide.setValue(value)
 
     def clear_layout(self, layout):
         if layout is not None:

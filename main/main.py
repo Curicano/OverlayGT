@@ -1,5 +1,6 @@
+from themes import themes
 import pyAesCrypt
-from winreg import (HKEY_LOCAL_MACHINE, OpenKeyEx, QueryValue, KEY_READ)
+from winreg import HKEY_LOCAL_MACHINE, OpenKeyEx, QueryValue, KEY_READ
 from win32gui import EnumWindows, GetWindowText
 from configparser import ConfigParser
 import os
@@ -11,7 +12,8 @@ from volume_control import V
 import webbrowser
 from keyboard import add_hotkey
 import win32api
-VERSION = "0.0.0.2"
+from widgets.splash_screen import SplashScreen
+VERSION = "0.0.0.3"
 NAME = "OverlayGT"
 s = 0
 
@@ -50,6 +52,7 @@ class MyWidget(QtWidgets.QMainWindow):
         super().__init__()
         self.ui = Ui_Form()
         self.ui.setupUi(self)
+        self.splash_screen = SplashScreen(self)
         self.volume_control = V()
         self.hot_key = HotKey()
         self.timer = QtCore.QTimer(self)
@@ -64,7 +67,7 @@ class MyWidget(QtWidgets.QMainWindow):
         self.timer.start(100)
         self.tray()
         if cfg["settings"]["launch_hidden"] == "0":
-            self.sh(self)
+            self.sh(self.splash_screen)
 
     def tray(self):
         self.tray_icon = QtWidgets.QSystemTrayIcon(self)
@@ -93,6 +96,10 @@ class MyWidget(QtWidgets.QMainWindow):
         self.ui.MusicWidget.hide()
         self.ui.SettingsWidget.ui.l.setText(
             f"Overlay GT {VERSION} (Python 3.10.7)")
+        name = ["White", "Red", "Green", "Blue", "Violet", "Yellow", "Blue Red", "Cold", "Fire Violet", "Fire", "Fuxia Neon Violet", "Fuxia Neon Yellow", "Gray", "Green Violet", "Ice Fire",
+                "Ice Green", "Ice Violet", "Ice", "Lineage", "Neon Yellow Ice", "Old Ice", "Orange Gray", "Orange", "Pink Gray", "Red Violet", "Violet Fire", "Violet Green", "Violet Ice", "Violet Red"]
+        for item in sorted(name):
+            self.ui.SettingsWidget.ui.cB.addItem(item)
         self.show_anim = QtCore.QPropertyAnimation(self, b"windowOpacity")
         self.show_anim.setDuration(500)
         self.show_anim.setStartValue(0)
@@ -108,11 +115,12 @@ class MyWidget(QtWidgets.QMainWindow):
         self.group_anim = QtCore.QParallelAnimationGroup(self)
         self.group_anim.addAnimation(self.show_anim)
         self.group_anim.addAnimation(self.show_anim_2)
+
         value = int(cfg["settings"]["theme"])
         self.ui.SettingsWidget.ui.cB.setCurrentIndex(value)
-        self.select_theme(self.ui.SettingsWidget.ui.cB.currentText())
+        themes.select_theme(self, self.path_to_themes,
+                            self.ui.SettingsWidget.ui.cB.currentText())
         value = cfg["settings"]["background_image"]
-        self.ui.l_back_img.setPixmap(QtGui.QPixmap(value))
         self.ui.SettingsWidget.ui.lE.setText(value)
         value = int(cfg["settings"]["blur"])
         self.ui.SettingsWidget.ui.hS.setValue(value)
@@ -215,14 +223,6 @@ class MyWidget(QtWidgets.QMainWindow):
         time = QtCore.QDateTime.currentDateTime()
         self.ui.l_time.setText(time.toString("hh : mm"))
 
-    def set_back_img(self, path):
-        ext = os.path.splitext(path)
-        if ext[1] == ".gif":
-            self.ui.l_back_img.setMovie(QtGui.QMovie(path))
-            self.ui.l_back_img.movie().start()
-        else:
-            self.ui.l_back_img.setPixmap(QtGui.QPixmap(path, ))
-
     def set_blur_img(self, value):
         self.blur_eff.setBlurRadius(value)
         self.ui.l_back_img.setGraphicsEffect(self.blur_eff)
@@ -233,9 +233,7 @@ class MyWidget(QtWidgets.QMainWindow):
             "https://github.com/Curicano/OverlayGT-2.0", new=0, autoraise=True)
 
     def resource_path(self, relative_path):
-        # Получаем абсолютный путь к ресурсам.
         try:
-            # PyInstaller создает временную папку в _MEIPASS
             base_path = sys._MEIPASS
         except Exception:
             base_path = os.path.abspath(".")
@@ -255,8 +253,6 @@ class MyWidget(QtWidgets.QMainWindow):
             lambda: self.sh(self.ui.TranslitWidget))
         self.ui.btn_settings.clicked.connect(
             lambda: self.sh(self.ui.SettingsWidget))
-        self.ui.SettingsWidget.ui.lE.textChanged.connect(
-            lambda path: self.set_back_img(path))
         self.ui.SettingsWidget.ui.hS.valueChanged.connect(self.set_blur_img)
         self.ui.SettingsWidget.ui.btn_check_upd.clicked.connect(self.check_upd)
         self.ui.SettingsWidget.ui.cBox_2.stateChanged.connect(
@@ -266,73 +262,31 @@ class MyWidget(QtWidgets.QMainWindow):
         self.ui.SettingsWidget.ui.cBox_4.stateChanged.connect(
             lambda: self.sh(self.ui.StatsWidget.ui.l_stat_2))
         self.ui.SettingsWidget.ui.cB.currentTextChanged.connect(
-            lambda name: self.select_theme(name))
+            lambda name: themes.select_theme(self, self.path_to_themes, name))
 
 
 if __name__ == "__main__":
-    def check_clone():
-        winlist = []
-        toplist = []
-
-        def enum_callback(hwnd, results):
-            winlist.append((GetWindowText(hwnd)))
-
-        EnumWindows(enum_callback, toplist)
-        t = [(title) for title in winlist if f"{NAME}" in title]
-        del winlist, toplist
-        if t == [f"{NAME}"]:
-            error = QtWidgets.QMessageBox()
-            error.setWindowTitle("Ошибка")
-            error.setWindowIcon(QtGui.QIcon(":/img/img_12.svg"))
-            error.setStandardButtons(QtWidgets.QMessageBox.Ok)
-            error.setText("Приложение уже запущено")
-            error.setIcon(QtWidgets.QMessageBox.Warning)
-            error.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
-            error.exec_()
-            sys.exit(0)
-
-    def start():
-        try:
-            myappid = "mycompany.myproduct.subproduct.version"
-            QtWinExtras.QtWin.setCurrentProcessExplicitAppUserModelID(myappid)
-        except ImportError as ex:
-            print(ex)
-        ui = MyWidget()
-        global app
-        app.exec_()
-
-    def prestart(type: int):
-        global app
-        app = QtWidgets.QApplication(sys.argv)
-        app.setCursorFlashTime(2000)
-        match type:
-            case 0:
-                start()
-            case 1:
-                # check_clone()
-                start()
     Reg = OpenKeyEx(HKEY_LOCAL_MACHINE,
                     r'SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\OverlayGT.exe', 0, KEY_READ)
     path = QueryValue(Reg, "")
     Reg.Close()
     path = f"{os.path.dirname(os.path.abspath(path))}\\settings"
-    #path = r"D:\Storage X\About\Programirovanie\Python\Git\OverlayGT 2.0\main\settings"
     deen = Crypter()
     deen.decrypt(path + ".cw")
     cfg = ConfigParser()
     cfg.read(path + ".ini")
     deen.encrypt(path + ".ini")
-    for arg in reversed(sys.argv):
+    for arg in sys.argv:
         match arg:
             case "-autostart":
                 if cfg["settings"]["autostart"] == "0":
                     sys.exit()
-                else:
-                    prestart(0)
-                    break
             case "-HDPI":
                 QtWidgets.QApplication.setAttribute(
                     QtCore.Qt.ApplicationAttribute.AA_EnableHighDpiScaling)
-            case _:
-                prestart(1)
-                break
+    myappid = "mycompany.myproduct.subproduct.version"
+    QtWinExtras.QtWin.setCurrentProcessExplicitAppUserModelID(myappid)
+    app = QtWidgets.QApplication(sys.argv)
+    app.setCursorFlashTime(2000)
+    ui = MyWidget()
+    app.exec_()

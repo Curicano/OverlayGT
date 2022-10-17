@@ -3,8 +3,10 @@ from widgets.music_widget import MusicWidget
 from widgets.audio_widget import AudioWidget
 from PyQt5.QtCore import pyqtSignal
 
+
 class MybtnMixer(QtWidgets.QPushButton):
     sh_signal = pyqtSignal(object)
+
     def __init__(self, parent=None):
         QtWidgets.QPushButton.__init__(self, parent=parent)
 

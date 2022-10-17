@@ -12,6 +12,15 @@ class Thread(QtCore.QThread):
         self.parent = parent
         self.speed = SpeedTest("ping-test.ru")
 
+    def humansize(self, nbytes):
+        suffixes = ['KB', 'MB', 'GB', 'TB', 'PB']
+        i = 0
+        while nbytes >= 1024 and i < len(suffixes)-1:
+            nbytes /= 1024.
+            i += 1
+        f = ('%.2f' % nbytes).rstrip('0').rstrip('.')
+        return '%s %s' % (f, suffixes[i])
+
     def run(self):
         while True:
             try:
@@ -20,15 +29,13 @@ class Thread(QtCore.QThread):
             except:
                 self.parent.ui.l_stat_1.setText("Нет подключения.")
             try:
-                st2 = str(round(self.speed.download()/1000, 2))
-                self.parent.ui.l_stat_2.setText("download: " + st2 + " mb")
+                pass
+                #st2 = str(round(self.speed.download()/1000, 2))
+                self.parent.ui.l_stat_2.setText("download: " + self.humansize(self.speed.download()))
             except:
                 self.parent.ui.l_stat_2.setText("Нет подключения.")
             self.parent.ui.l_stat.setText(str(str(round(
                 uptime()/86400)) + " : " + strftime("%H : %M : %S", gmtime(round(uptime())))))
-
-
-
 
 
 class StatsWidget(QtWidgets.QFrame):
