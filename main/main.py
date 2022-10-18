@@ -1,7 +1,6 @@
 from themes import themes
 import pyAesCrypt
 from winreg import HKEY_LOCAL_MACHINE, OpenKeyEx, QueryValue, KEY_READ
-from win32gui import EnumWindows, GetWindowText
 from configparser import ConfigParser
 import os
 import sys
@@ -49,7 +48,7 @@ class HotKey(QtCore.QObject):
 
 class MyWidget(QtWidgets.QMainWindow):
     def __init__(self):
-        super().__init__()
+        QtWidgets.QMainWindow.__init__(self)
         self.ui = Ui_Form()
         self.ui.setupUi(self)
         self.splash_screen = SplashScreen(self)
