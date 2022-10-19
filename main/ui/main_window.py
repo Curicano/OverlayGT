@@ -11,13 +11,13 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_Form(object):
-    def setupUi(self, Form):
-        Form.setObjectName("Form")
-        Form.resize(1920, 1080)
-        Form.setMinimumSize(QtCore.QSize(1920, 1080))
-        Form.setMaximumSize(QtCore.QSize(1920, 1080))
-        self.f_main = QtWidgets.QFrame(Form)
+class Ui_MainWindow(object):
+    def setupUi(self, MainWindow):
+        MainWindow.setObjectName("MainWindow")
+        MainWindow.resize(1920, 1080)
+        MainWindow.setMinimumSize(QtCore.QSize(1920, 1080))
+        MainWindow.setMaximumSize(QtCore.QSize(1920, 1080))
+        self.f_main = QtWidgets.QFrame(MainWindow)
         self.f_main.setGeometry(QtCore.QRect(0, 0, 1920, 1080))
         self.f_main.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.f_main.setFrameShadow(QtWidgets.QFrame.Raised)
@@ -26,7 +26,7 @@ class Ui_Form(object):
         self.l_back_img.setGeometry(QtCore.QRect(0, 0, 1920, 1080))
         self.l_back_img.setScaledContents(True)
         self.l_back_img.setObjectName("l_back_img")
-        self.f_child = QtWidgets.QFrame(Form)
+        self.f_child = QtWidgets.QFrame(MainWindow)
         self.f_child.setGeometry(QtCore.QRect(0, 0, 1920, 1080))
         self.f_child.setObjectName("f_child")
         self.f_menu = QtWidgets.QFrame(self.f_child)
@@ -75,7 +75,7 @@ class Ui_Form(object):
         self.l_time.setAlignment(QtCore.Qt.AlignCenter)
         self.l_time.setObjectName("l_time")
         self.hboxlayout.addWidget(self.l_time)
-        self.btn_settings = QtWidgets.QPushButton(self.f_menu)
+        self.btn_settings = MybtnSettings(self.f_menu)
         self.btn_settings.setMinimumSize(QtCore.QSize(30, 50))
         self.btn_settings.setMaximumSize(QtCore.QSize(30, 50))
         icon2 = QtGui.QIcon()
@@ -101,13 +101,29 @@ class Ui_Form(object):
         self.MusicWidget.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.MusicWidget.setFrameShadow(QtWidgets.QFrame.Raised)
         self.MusicWidget.setObjectName("MusicWidget")
+        self.VersionWidget = QtWidgets.QFrame(self.f_child)
+        self.VersionWidget.setGeometry(QtCore.QRect(960, 120, 200, 60))
+        self.VersionWidget.setObjectName("VersionWidget")
+        self.verticalLayout = QtWidgets.QVBoxLayout(self.VersionWidget)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.l_1 = QtWidgets.QLabel(self.VersionWidget)
+        self.l_1.setText("")
+        self.l_1.setAlignment(QtCore.Qt.AlignCenter)
+        self.l_1.setObjectName("l_1")
+        self.verticalLayout.addWidget(self.l_1)
+        self.l_2 = QtWidgets.QLabel(self.VersionWidget)
+        self.l_2.setAlignment(QtCore.Qt.AlignCenter)
+        self.l_2.setObjectName("l_2")
+        self.verticalLayout.addWidget(self.l_2)
 
-        self.retranslateUi(Form)
-        QtCore.QMetaObject.connectSlotsByName(Form)
+        self.retranslateUi(MainWindow)
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-    def retranslateUi(self, Form):
-        pass
+    def retranslateUi(self, MainWindow):
+        _translate = QtCore.QCoreApplication.translate
+        self.l_2.setText(_translate("MainWindow", "Copyright (c) 2022 | OSx"))
 from modified_elements.btn_mixer import MybtnMixer
+from modified_elements.btn_settings import MybtnSettings
 from widgets.audio_widget import AudioWidget
 from widgets.music_widget import MusicWidget
 from widgets.settings_widget import SettingsWidget

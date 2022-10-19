@@ -6,13 +6,13 @@ import os
 import sys
 from PyQt5 import QtCore, QtWidgets, QtGui, QtWinExtras
 from image import res
-from ui.main_window import Ui_Form
+from ui.main_window import Ui_MainWindow
 from volume_control import V
 import webbrowser
 from keyboard import add_hotkey
 import win32api
 from widgets.splash_screen import SplashScreen
-VERSION = "0.0.0.3"
+VERSION = "v0.0.0.3"
 NAME = "OverlayGT"
 s = 0
 
@@ -49,7 +49,7 @@ class HotKey(QtCore.QObject):
 class MyWidget(QtWidgets.QMainWindow):
     def __init__(self):
         QtWidgets.QMainWindow.__init__(self)
-        self.ui = Ui_Form()
+        self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.splash_screen = SplashScreen(self)
         self.volume_control = V()
@@ -81,7 +81,7 @@ class MyWidget(QtWidgets.QMainWindow):
         self.tray_menu.addActions(
             [self.quit_action, self.show_action, self.check_upd_action])
         self.tray_icon.setContextMenu(self.tray_menu)
-        self.tray_icon.setToolTip(f"{NAME} v{VERSION}")
+        self.tray_icon.setToolTip(f"{NAME} {VERSION}")
         self.tray_icon.show()
 
     def rebuilder(self):
@@ -93,8 +93,9 @@ class MyWidget(QtWidgets.QMainWindow):
         self.ui.TranslitWidget.hide()
         self.ui.SettingsWidget.hide()
         self.ui.MusicWidget.hide()
-        self.ui.SettingsWidget.ui.l.setText(
-            f"Overlay GT {VERSION} (Python 3.10.7)")
+        self.ui.VersionWidget.hide()
+        self.ui.l_1.setText(
+            f"{NAME} {VERSION} (Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro})")
         name = ["White", "Red", "Green", "Blue", "Violet", "Yellow", "Blue Red", "Cold", "Fire Violet", "Fire", "Fuxia Neon Violet", "Fuxia Neon Yellow", "Gray", "Green Violet", "Ice Fire",
                 "Ice Green", "Ice Violet", "Ice", "Lineage", "Neon Yellow Ice", "Old Ice", "Orange Gray", "Orange", "Pink Gray", "Red Violet", "Violet Fire", "Violet Green", "Violet Ice", "Violet Red"]
         for item in sorted(name):
@@ -199,6 +200,7 @@ class MyWidget(QtWidgets.QMainWindow):
 
     def sh(self, obj):
         global s
+        print(obj.objectName())
         if obj.isHidden() == False:
             if obj == self:
                 self.group_anim.finished.connect(self.hide)
@@ -250,8 +252,8 @@ class MyWidget(QtWidgets.QMainWindow):
         self.ui.btn_mixer.sh_signal.connect(lambda obj: self.sh(obj))
         self.ui.btn_interpreter.clicked.connect(
             lambda: self.sh(self.ui.TranslitWidget))
-        self.ui.btn_settings.clicked.connect(
-            lambda: self.sh(self.ui.SettingsWidget))
+        self.ui.btn_settings.sh_signal.connect(
+            lambda obj: self.sh(obj))
         self.ui.SettingsWidget.ui.hS.valueChanged.connect(self.set_blur_img)
         self.ui.SettingsWidget.ui.btn_check_upd.clicked.connect(self.check_upd)
         self.ui.SettingsWidget.ui.cBox_2.stateChanged.connect(

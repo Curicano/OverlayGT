@@ -1,7 +1,7 @@
 #f_main {
     background-color: rgba(0, 0, 0, 150);
 }
-#f_menu, #AudioWidget, #line, #MusicWidget, #SettingsWidget, #TranslitWidget, #tE_1, #tE_2 {
+#f_menu, #AudioWidget, #line, #MusicWidget, #SettingsWidget, #TranslitWidget, #tE_1, #tE_2, #VersionWidget {
     background-color: rgb(30, 30, 30);
     border: 1px solid color255;
 	border-radius: 3px;

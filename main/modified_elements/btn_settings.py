@@ -2,7 +2,7 @@ from PyQt5 import QtCore, QtWidgets, QtGui
 from PyQt5.QtCore import pyqtSignal
 
 
-class MybtnMixer(QtWidgets.QPushButton):
+class MybtnSettings(QtWidgets.QPushButton):
     sh_signal = pyqtSignal(object)
 
     def __init__(self, parent=None):
@@ -10,7 +10,8 @@ class MybtnMixer(QtWidgets.QPushButton):
 
     def mousePressEvent(self, e: QtGui.QMouseEvent) -> None:
         if e.button() == QtCore.Qt.MouseButton.RightButton:
-            self.sh_signal.emit(self.parent().parent().parent().ui.MusicWidget)
+            #print(self.parent().parent().parent().objectName())
+            self.sh_signal.emit(self.parent().parent().parent().ui.VersionWidget)
         elif e.button() == QtCore.Qt.MouseButton.LeftButton:
-            self.sh_signal.emit(self.parent().parent().parent().ui.AudioWidget)
+            self.sh_signal.emit(self.parent().parent().parent().ui.SettingsWidget)
         return super().mousePressEvent(e)

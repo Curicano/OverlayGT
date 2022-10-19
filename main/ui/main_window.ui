@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>MainWindow</class>
+ <widget class="QWidget" name="MainWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -174,7 +174,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="btn_settings">
+      <widget class="MybtnSettings" name="btn_settings">
        <property name="minimumSize">
         <size>
          <width>30</width>
@@ -257,6 +257,38 @@
      <enum>QFrame::Raised</enum>
     </property>
    </widget>
+   <widget class="QFrame" name="VersionWidget">
+    <property name="geometry">
+     <rect>
+      <x>960</x>
+      <y>120</y>
+      <width>200</width>
+      <height>60</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QLabel" name="l_1">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="l_2">
+       <property name="text">
+        <string>Copyright (c) 2022 | OSx</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
   </widget>
  </widget>
  <customwidgets>
@@ -294,6 +326,11 @@
    <extends>QFrame</extends>
    <header>widgets.music_widget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MybtnSettings</class>
+   <extends>QPushButton</extends>
+   <header>modified_elements.btn_settings.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
