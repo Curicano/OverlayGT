@@ -92,7 +92,6 @@ class MyWidget(QtWidgets.QMainWindow):
         self.ui.AudioWidget.hide()
         self.ui.TranslitWidget.hide()
         self.ui.SettingsWidget.hide()
-        self.ui.MusicWidget.hide()
         self.ui.VersionWidget.hide()
         self.ui.l_1.setText(
             f"{NAME} {VERSION} (Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro})")
@@ -110,64 +109,64 @@ class MyWidget(QtWidgets.QMainWindow):
         self.show_anim_2.setStartValue(QtCore.QRect(0, 1080, 1920, 1080))
         self.show_anim_2.setEndValue(QtCore.QRect(0, 0, 1920, 1080))
         self.show_anim_2.setDirection(1)
-        self.show_anim_2.setEasingCurve(QtCore.QEasingCurve.InOutQuint)
+        self.show_anim_2.setEasingCurve(QtCore.QEasingCurve.Type.InOutQuint)
 
         self.group_anim = QtCore.QParallelAnimationGroup(self)
         self.group_anim.addAnimation(self.show_anim)
         self.group_anim.addAnimation(self.show_anim_2)
 
-        value = int(cfg["settings"]["theme"])
-        self.ui.SettingsWidget.ui.cB.setCurrentIndex(value)
+        self.ui.SettingsWidget.ui.cB.setCurrentText(cfg["settings"]["theme"])
         themes.select_theme(self, self.path_to_themes,
                             self.ui.SettingsWidget.ui.cB.currentText())
-        value = cfg["settings"]["background_image"]
-        self.ui.SettingsWidget.ui.lE.setText(value)
-        value = int(cfg["settings"]["blur"])
-        self.ui.SettingsWidget.ui.hS.setValue(value)
-        self.ui.SettingsWidget.ui.l_num_2.setNum(value)
-        self.set_blur_img(value)
-        value = int(cfg["settings"]["autostart"])
-        self.ui.SettingsWidget.ui.cBox.setCheckState(value)
-        value = int(cfg["settings"]["launch_hidden"])
-        self.ui.SettingsWidget.ui.cBox_1.setCheckState(value)
-        value = int(cfg["settings"]["stat_time_startup"])
-        match value:
+        self.ui.SettingsWidget.ui.lE.setText(
+            cfg["settings"]["background_image"])
+        self.ui.SettingsWidget.ui.hS.setValue(int(cfg["settings"]["blur"]))
+        self.ui.SettingsWidget.ui.l_num_2.setNum(int(cfg["settings"]["blur"]))
+        self.set_blur_img(int(cfg["settings"]["blur"]))
+        self.ui.SettingsWidget.ui.cBox.setCheckState(
+            int(cfg["settings"]["autostart"]))
+        self.ui.SettingsWidget.ui.cBox_1.setCheckState(
+            int(cfg["settings"]["launch_hidden"]))
+        match int(cfg["settings"]["stat_time_startup"]):
             case 0:
                 self.ui.StatsWidget.ui.l_stat.hide()
             case _:
                 self.ui.StatsWidget.ui.l_stat.show()
-        self.ui.SettingsWidget.ui.cBox_2.setCheckState(value)
-        value = int(cfg["settings"]["stat_ping"])
-        match value:
+        self.ui.SettingsWidget.ui.cBox_2.setCheckState(
+            int(cfg["settings"]["stat_time_startup"]))
+        match int(cfg["settings"]["stat_ping"]):
             case 0:
                 self.ui.StatsWidget.ui.l_stat_1.hide()
             case _:
                 self.ui.StatsWidget.ui.l_stat_1.show()
-        self.ui.SettingsWidget.ui.cBox_3.setCheckState(value)
-        value = int(cfg["settings"]["stat_download"])
-        match value:
+        self.ui.SettingsWidget.ui.cBox_3.setCheckState(
+            int(cfg["settings"]["stat_ping"]))
+        match int(cfg["settings"]["stat_download"]):
             case 0:
                 self.ui.StatsWidget.ui.l_stat_2.hide()
             case _:
                 self.ui.StatsWidget.ui.l_stat_2.show()
-        self.ui.SettingsWidget.ui.cBox_4.setCheckState(value)
+        self.ui.SettingsWidget.ui.cBox_4.setCheckState(
+            int(cfg["settings"]["stat_download"]))
         self.ui.AudioWidget.move(
             int(cfg["audio_widget_pos"]["x"]), int(cfg["audio_widget_pos"]["y"]))
         self.ui.SettingsWidget.move(
             int(cfg["settings_widget_pos"]["x"]), int(cfg["settings_widget_pos"]["y"]))
         self.ui.TranslitWidget.move(
             int(cfg["translit_widget_pos"]["x"]), int(cfg["translit_widget_pos"]["y"]))
-        del value
-
-    def hide(self):
-        self.ui.StatsWidget.thr.terminate()
-        self.timer.stop()
-        return super().hide()
 
     def show(self):
+        return super().showFullScreen(), super().setFocus()
+
+    def hideEvent(self, a0):
+        self.ui.StatsWidget.thr.terminate()
+        self.timer.stop()
+        return super().hideEvent(a0)
+
+    def showEvent(self, a0):
         self.ui.StatsWidget.thr.start(QtCore.QThread.Priority.LowestPriority)
         self.timer.start(100)
-        return super().showFullScreen(), super().setFocus()
+        return super().showEvent(a0)
 
     def close(self):
         deen.decrypt(path + ".cw")
@@ -249,7 +248,7 @@ class MyWidget(QtWidgets.QMainWindow):
     def connections(self):
         self.hot_key.sh.connect(lambda: self.sh(self))
         self.timer.timeout.connect(self.show_time)
-        self.ui.btn_mixer.sh_signal.connect(lambda obj: self.sh(obj))
+        self.ui.btn_mixer.clicked.connect(lambda: self.sh(self.ui.AudioWidget))
         self.ui.btn_interpreter.clicked.connect(
             lambda: self.sh(self.ui.TranslitWidget))
         self.ui.btn_settings.sh_signal.connect(

@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="img">
+    <file>img_15.png</file>
+    <file>img_16.png</file>
     <file>img_12.png</file>
     <file>img_13.png</file>
     <file>img_14.png</file>

@@ -2,6 +2,7 @@ from PyQt5 import QtCore, QtWidgets, QtGui
 from ui.widget_0 import Ui_AudioWidget
 from volume_control import V
 from image import res
+import pyautogui as pg
 
 
 class AudioWidget(QtWidgets.QFrame):
@@ -9,12 +10,39 @@ class AudioWidget(QtWidgets.QFrame):
         QtWidgets.QFrame.__init__(self, parent=parent)
         self.ui = Ui_AudioWidget()
         self.ui.setupUi(self)
+        self.connections()
         self.volume_control = V()
         self.icon = QtGui.QIcon()
         self.icon.addPixmap(QtGui.QPixmap(":/img/img_7.png"),
                             QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.icon_1 = QtGui.QIcon()
+        self.icon_1.addPixmap(QtGui.QPixmap(":/img/img_15.png"),
+                            QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.icon_2 = QtGui.QIcon()
+        self.icon_2.addPixmap(QtGui.QPixmap(":/img/img_16.png"),
+                            QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.fonts = QtGui.QFont("Biennale Black", 10)
+        self.animation = QtCore.QPropertyAnimation(self, b"size")
+        self.animation.setStartValue(QtCore.QSize(320, 140))
+        self.animation.setEndValue(QtCore.QSize(320, 420))
+        self.animation.setDuration(500)
+        self.animation.setEasingCurve(QtCore.QEasingCurve.Type.InOutQuint)
+        self.animation.setDirection(self.animation.Direction.Backward)
+        self.animation.start()
+        self.state = 1
         self._old_pos = None
+
+    def startAnim(self):
+        if self.state == 0:
+            self.animation.setDirection(self.animation.Direction.Backward)
+            self.animation.start()
+            self.state = 1
+            self.ui.btn_move.setIcon(self.icon_2)
+        else:
+            self.animation.setDirection(self.animation.Direction.Forward)
+            self.animation.start()
+            self.state = 0
+            self.ui.btn_move.setIcon(self.icon_1)
 
     def showEvent(self, a0: QtGui.QShowEvent):
         self.volume_start()
@@ -122,7 +150,7 @@ class AudioWidget(QtWidgets.QFrame):
             sliders.append(children1)
         for slide in sliders:
             for label in labels:
-                if slide.objectName() == label.objectName()== name:
+                if slide.objectName() == label.objectName() == name:
                     label.setNum(value)
 
     def mute(self, value, name):
@@ -146,3 +174,9 @@ class AudioWidget(QtWidgets.QFrame):
                     widget.deleteLater()
                 else:
                     self.clear_layout(item.layout())
+
+    def connections(self):
+        self.ui.btn_prev.clicked.connect(lambda: pg.press("prevtrack"))
+        self.ui.btn_next.clicked.connect(lambda: pg.press("nexttrack"))
+        self.ui.btn_pp.clicked.connect(lambda: pg.press("playpause"))
+        self.ui.btn_move.clicked.connect(self.startAnim)

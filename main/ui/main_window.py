@@ -36,7 +36,7 @@ class Ui_MainWindow(object):
         self.hboxlayout.setContentsMargins(4, 4, 4, 4)
         self.hboxlayout.setSpacing(4)
         self.hboxlayout.setObjectName("hboxlayout")
-        self.btn_mixer = MybtnMixer(self.f_menu)
+        self.btn_mixer = QtWidgets.QPushButton(self.f_menu)
         self.btn_mixer.setMinimumSize(QtCore.QSize(50, 50))
         self.btn_mixer.setMaximumSize(QtCore.QSize(50, 50))
         icon = QtGui.QIcon()
@@ -96,11 +96,6 @@ class Ui_MainWindow(object):
         self.StatsWidget = StatsWidget(self.f_child)
         self.StatsWidget.setGeometry(QtCore.QRect(0, 1010, 130, 70))
         self.StatsWidget.setObjectName("StatsWidget")
-        self.MusicWidget = MusicWidget(self.f_child)
-        self.MusicWidget.setGeometry(QtCore.QRect(725, 120, 300, 80))
-        self.MusicWidget.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        self.MusicWidget.setFrameShadow(QtWidgets.QFrame.Raised)
-        self.MusicWidget.setObjectName("MusicWidget")
         self.VersionWidget = QtWidgets.QFrame(self.f_child)
         self.VersionWidget.setGeometry(QtCore.QRect(960, 120, 200, 60))
         self.VersionWidget.setObjectName("VersionWidget")
@@ -122,10 +117,8 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         self.l_2.setText(_translate("MainWindow", "Copyright (c) 2022 | OSx"))
-from modified_elements.btn_mixer import MybtnMixer
 from modified_elements.btn_settings import MybtnSettings
 from widgets.audio_widget import AudioWidget
-from widgets.music_widget import MusicWidget
 from widgets.settings_widget import SettingsWidget
 from widgets.stats_widget import StatsWidget
 from widgets.translit_widget import TranslitWidget
