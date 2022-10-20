@@ -183,7 +183,7 @@ class MyWidget(QtWidgets.QMainWindow):
             self.group_anim.start()
             self.show()
 
-    def close(self):
+    def save_settings(self):
         deen.decrypt(path + ".cw")
         cfg["settings"] = {"theme": f"{self.ui.SettingsWidget.ui.cB.currentIndex()}",
                            "background_image": f"{self.ui.SettingsWidget.ui.lE.text()}",
@@ -203,6 +203,8 @@ class MyWidget(QtWidgets.QMainWindow):
         with open(path + ".ini", "w+") as file:
             cfg.write(file)
         deen.encrypt(path + ".ini")
+
+    def close(self):
         sys.exit()
 
     def keyPressEvent(self, e):
@@ -262,6 +264,7 @@ class MyWidget(QtWidgets.QMainWindow):
             lambda: self.sh(self.ui.StatsWidget.ui.l_stat_2))
         self.ui.SettingsWidget.ui.cB.currentTextChanged.connect(
             lambda name: themes.select_theme(self, self.path_to_themes, name))
+        self.ui.SettingsWidget.ui.btn_save.clicked.connect(self.save_settings)
 
 
 if __name__ == "__main__":
