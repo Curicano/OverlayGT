@@ -67,6 +67,7 @@ class MyWidget(QtWidgets.QMainWindow):
         self.tray()
         if cfg["settings"]["launch_hidden"] == "0":
             self.sh(self.splash_screen)
+        self.state = 0
 
     def tray(self):
         self.tray_icon = QtWidgets.QSystemTrayIcon(self)
@@ -168,6 +169,20 @@ class MyWidget(QtWidgets.QMainWindow):
         self.timer.start(100)
         return super().showEvent(a0)
 
+    def sh_self(self):
+        if self.isHidden() == False:
+            self.group_anim.finished.connect(self.hide)
+            self.state = 1
+            self.group_anim.setDirection(self.group_anim.Direction(1))
+            self.group_anim.start()
+        else:
+            if self.state == 1:
+                self.group_anim.finished.disconnect(self.hide)
+                self.state = 0
+            self.group_anim.setDirection(self.group_anim.Direction(0))
+            self.group_anim.start()
+            self.show()
+
     def close(self):
         deen.decrypt(path + ".cw")
         cfg["settings"] = {"theme": f"{self.ui.SettingsWidget.ui.cB.currentIndex()}",
@@ -192,32 +207,16 @@ class MyWidget(QtWidgets.QMainWindow):
 
     def keyPressEvent(self, e):
         if int(e.key()) == (QtCore.Qt.Key.Key_Escape):
-            self.sh(self)
+            self.sh_self()
         if int(e.modifiers()) == (QtCore.Qt.AltModifier):
             if e.key() == QtCore.Qt.Key_1:
                 self.sh(self.ui.f_child)
 
     def sh(self, obj):
-        global s
-        print(obj.objectName())
         if obj.isHidden() == False:
-            if obj == self:
-                self.group_anim.finished.connect(self.hide)
-                s = 1
-                self.group_anim.setDirection(self.group_anim.Direction(1))
-                self.group_anim.start()
-            else:
-                obj.hide()
+            obj.hide()
         else:
-            if obj == self:
-                self.group_anim.setDirection(self.group_anim.Direction(0))
-                if s == 1:
-                    self.group_anim.finished.disconnect(self.hide)
-                    s = 0
-                self.group_anim.start()
-                self.show()
-            else:
-                obj.show()
+            obj.show()
 
     def show_time(self):
         time = QtCore.QDateTime.currentDateTime()
@@ -246,7 +245,7 @@ class MyWidget(QtWidgets.QMainWindow):
             file.close()
 
     def connections(self):
-        self.hot_key.sh.connect(lambda: self.sh(self))
+        self.hot_key.sh.connect(self.sh_self)
         self.timer.timeout.connect(self.show_time)
         self.ui.btn_mixer.clicked.connect(lambda: self.sh(self.ui.AudioWidget))
         self.ui.btn_interpreter.clicked.connect(
