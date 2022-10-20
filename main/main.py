@@ -184,7 +184,6 @@ class MyWidget(QtWidgets.QMainWindow):
             self.show()
 
     def save_settings(self):
-        deen.decrypt(path + ".cw")
         cfg["settings"] = {"theme": f"{self.ui.SettingsWidget.ui.cB.currentIndex()}",
                            "background_image": f"{self.ui.SettingsWidget.ui.lE.text()}",
                            "blur": f"{self.ui.SettingsWidget.ui.hS.value()}",
@@ -200,6 +199,7 @@ class MyWidget(QtWidgets.QMainWindow):
                                       "y": f"{self.ui.SettingsWidget.pos().y()}"}
         cfg["translit_widget_pos"] = {"x": f"{self.ui.TranslitWidget.pos().x()}",
                                       "y": f"{self.ui.TranslitWidget.pos().y()}"}
+        deen.decrypt(path + ".cw")
         with open(path + ".ini", "w+") as file:
             cfg.write(file)
         deen.encrypt(path + ".ini")
