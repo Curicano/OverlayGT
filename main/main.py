@@ -14,7 +14,6 @@ import win32api
 from widgets.splash_screen import SplashScreen
 VERSION = "v0.0.0.3"
 NAME = "OverlayGT"
-s = 0
 
 
 class Crypter():
