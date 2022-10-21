@@ -229,7 +229,7 @@ class MyWidget(QtWidgets.QMainWindow):
         self.ui.l_back_img.setGraphicsEffect(self.blur_eff)
 
     def check_upd(self):
-        self.sh(self)
+        self.sh_self()
         webbrowser.open(
             "https://github.com/Curicano/OverlayGT-2.0", new=0, autoraise=True)
 
