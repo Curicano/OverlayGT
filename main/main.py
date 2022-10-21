@@ -229,7 +229,6 @@ class MyWidget(QtWidgets.QMainWindow):
         self.ui.l_back_img.setGraphicsEffect(self.blur_eff)
 
     def check_upd(self):
-        self.sh_self()
         webbrowser.open(
             "https://github.com/Curicano/OverlayGT-2.0", new=0, autoraise=True)
 
@@ -255,7 +254,7 @@ class MyWidget(QtWidgets.QMainWindow):
         self.ui.btn_settings.sh_signal.connect(
             lambda obj: self.sh(obj))
         self.ui.SettingsWidget.ui.hS.valueChanged.connect(self.set_blur_img)
-        self.ui.SettingsWidget.ui.btn_check_upd.clicked.connect(self.check_upd)
+        self.ui.SettingsWidget.ui.btn_check_upd.clicked.connect(lambda: [self.sh_self(), self.check_upd()])
         self.ui.SettingsWidget.ui.cBox_2.stateChanged.connect(
             lambda: self.sh(self.ui.StatsWidget.ui.l_stat))
         self.ui.SettingsWidget.ui.cBox_3.stateChanged.connect(
