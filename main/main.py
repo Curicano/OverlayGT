@@ -238,12 +238,6 @@ class MyWidget(QtWidgets.QMainWindow):
             base_path = os.path.abspath(".")
         return os.path.join(base_path, relative_path)
 
-    def select_theme(self, name):
-        with open(f"{self.path_to_themes}\\{name}.qss", "r") as file:
-            theme = file.read()
-            self.setStyleSheet(theme)
-            file.close()
-
     def connections(self):
         self.hot_key.sh.connect(self.sh_self)
         self.timer.timeout.connect(self.show_time)
