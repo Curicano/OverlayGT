@@ -72,9 +72,9 @@ class MyWidget(QtWidgets.QMainWindow):
         self.tray_icon = QtWidgets.QSystemTrayIcon(self)
         self.tray_icon.setIcon(self.icon)
         self.quit_action = QtWidgets.QAction("Выйти", self)
-        self.quit_action.triggered.connect(lambda: self.close())
+        self.quit_action.triggered.connect(self.close)
         self.show_action = QtWidgets.QAction("Показать", self)
-        self.show_action.triggered.connect(lambda: self.sh(self))
+        self.show_action.triggered.connect(self.sh_self)
         self.check_upd_action = QtWidgets.QAction("Проверить обновления", self)
         self.check_upd_action.triggered.connect(self.check_upd)
         self.tray_menu = QtWidgets.QMenu()
@@ -247,7 +247,8 @@ class MyWidget(QtWidgets.QMainWindow):
         self.ui.btn_settings.sh_signal.connect(
             lambda obj: self.sh(obj))
         self.ui.SettingsWidget.ui.hS.valueChanged.connect(self.set_blur_img)
-        self.ui.SettingsWidget.ui.btn_check_upd.clicked.connect(lambda: [self.sh_self(), self.check_upd()])
+        self.ui.SettingsWidget.ui.btn_check_upd.clicked.connect(
+            lambda: [self.sh_self(), self.check_upd()])
         self.ui.SettingsWidget.ui.cBox_2.stateChanged.connect(
             lambda: self.sh(self.ui.StatsWidget.ui.l_stat))
         self.ui.SettingsWidget.ui.cBox_3.stateChanged.connect(
