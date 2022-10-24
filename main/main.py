@@ -54,7 +54,6 @@ class MyWidget(QtWidgets.QMainWindow):
         self.volume_control = V()
         self.hot_key = HotKey()
         self.timer = QtCore.QTimer(self)
-        self.blur_eff = QtWidgets.QGraphicsBlurEffect()
         self.icon = QtGui.QIcon()
         self.icon.addPixmap(QtGui.QPixmap(":/img/logo.ico"),
                             QtGui.QIcon.Normal, QtGui.QIcon.On)
@@ -122,7 +121,7 @@ class MyWidget(QtWidgets.QMainWindow):
             cfg["settings"]["background_image"])
         self.ui.SettingsWidget.ui.hS.setValue(int(cfg["settings"]["blur"]))
         self.ui.SettingsWidget.ui.l_num_2.setNum(int(cfg["settings"]["blur"]))
-        self.set_blur_img(int(cfg["settings"]["blur"]))
+        self.ui.SettingsWidget.set_blur_img(int(cfg["settings"]["blur"]))
         self.ui.SettingsWidget.ui.cBox.setCheckState(
             int(cfg["settings"]["autostart"]))
         self.ui.SettingsWidget.ui.cBox_1.setCheckState(
@@ -204,6 +203,7 @@ class MyWidget(QtWidgets.QMainWindow):
         deen.encrypt(path + ".ini")
 
     def close(self):
+        self.save_settings()
         sys.exit()
 
     def keyPressEvent(self, e):
@@ -222,10 +222,6 @@ class MyWidget(QtWidgets.QMainWindow):
     def show_time(self):
         time = QtCore.QDateTime.currentDateTime()
         self.ui.l_time.setText(time.toString("hh : mm"))
-
-    def set_blur_img(self, value):
-        self.blur_eff.setBlurRadius(value)
-        self.ui.l_back_img.setGraphicsEffect(self.blur_eff)
 
     def check_upd(self):
         webbrowser.open(
@@ -246,7 +242,6 @@ class MyWidget(QtWidgets.QMainWindow):
             lambda: self.sh(self.ui.TranslitWidget))
         self.ui.btn_settings.sh_signal.connect(
             lambda obj: self.sh(obj))
-        self.ui.SettingsWidget.ui.hS.valueChanged.connect(self.set_blur_img)
         self.ui.SettingsWidget.ui.btn_check_upd.clicked.connect(
             lambda: [self.sh_self(), self.check_upd()])
         self.ui.SettingsWidget.ui.cBox_2.stateChanged.connect(
@@ -258,6 +253,7 @@ class MyWidget(QtWidgets.QMainWindow):
         self.ui.SettingsWidget.ui.cB.currentTextChanged.connect(
             lambda name: themes.select_theme(self, self.path_to_themes, name))
         self.ui.SettingsWidget.ui.btn_save.clicked.connect(self.save_settings)
+        self.ui.btn_exit.clicked.connect(self.close)
 
 
 if __name__ == "__main__":

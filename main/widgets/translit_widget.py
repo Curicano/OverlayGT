@@ -4,12 +4,45 @@ from image import res
 from ui.widget_1 import Ui_TranslitWidget
 
 
+class Thread(QtCore.QThread):
+    signal = QtCore.pyqtSignal(str)
+
+    def __init__(self, parent=None):
+        super(Thread, self).__init__(parent=parent)
+        self.parent = parent
+        self.setParent(parent)
+
+    def run(self):
+        text = self.parent.ui.tE_1.toPlainText()
+        if self.parent.ui.l_from_lang.text() == "Русский":
+            self.from_lang = "ru"
+            self.to_lang = "en"
+        else:
+            self.from_lang = "en"
+            self.to_lang = "ru"
+
+        if text.__len__() > 500:
+            n = [text[x:x+500] for x in range(0, len(text), 500)]
+            for i in range(n.__len__()):
+                self.translate(n[i], self.from_lang, self.to_lang, mode=1)
+        else:
+            self.translate(text, self.from_lang, self.to_lang)
+
+    def translate(self, text, from_l, to_l, mode=0):
+        t1 = Translator(from_lang=from_l, to_lang=to_l)
+        t2 = t1.translate(text)
+        match mode:
+            case 0: self.signal.emit(t2)
+            case 1: self.signal.emit(self.parent.ui.tE_2.toPlainText() + t2)
+
+
 class TranslitWidget(QtWidgets.QFrame):
     def __init__(self, parent=None):
         QtWidgets.QFrame.__init__(self, parent=parent)
         self.ui = Ui_TranslitWidget()
         self.ui.setupUi(self)
         self.rebuilder()
+        self.thr = Thread(self)
         self.connections()
         self.to_lang = "en"
         self.from_lang = "ru"
@@ -25,27 +58,8 @@ class TranslitWidget(QtWidgets.QFrame):
             [self.ui.action_4, self.menu_2.addSeparator(), self.ui.action_7])
 
     def translit(self):
-        text = self.ui.tE_1.toPlainText()
-        if self.ui.l_from_lang.text() == "Русский":
-            self.from_lang = "ru"
-            self.to_lang = "en"
-        else:
-            self.from_lang = "en"
-            self.to_lang = "ru"
-
-        def f(self, text, mode):
-            t1 = Translator(from_lang=self.from_lang, to_lang=self.to_lang)
-            t2 = t1.translate(text)
-            match mode:
-                case 0: self.ui.tE_2.setText(t2)
-                case 1: self.ui.tE_2.setText(self.ui.tE_2.toPlainText() + t2)
-
-        if text.__len__() > 500:
-            f = [text[x:x+500] for x in range(0, len(text), 500)]
-            for i in range(f.__len__()):
-                f(self, f[1], 1)
-        else:
-            f(self, text, 0)
+        self.thr.terminate()
+        self.thr.start()
 
     def swap_lang(self):
         tE_1, tE_2 = self.ui.tE_1.toPlainText(), self.ui.tE_2.toPlainText()
@@ -92,8 +106,10 @@ class TranslitWidget(QtWidgets.QFrame):
 
     def connections(self):
         self.ui.btn_swap_lang.clicked.connect(self.swap_lang)
+        self.ui.tE_1.textChanged.connect(self.translit)
         self.ui.btn_translite.clicked.connect(self.translit)
         self.ui.tE_1.customContextMenuRequested.connect(
             self.show_context_menu)
         self.ui.tE_2.customContextMenuRequested.connect(
             self.show_context_menu_2)
+        self.thr.signal.connect(lambda text: self.ui.tE_2.setText(text))

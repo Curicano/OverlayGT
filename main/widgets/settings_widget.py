@@ -1,4 +1,5 @@
 import os
+from pydoc import ispath
 import random
 from PyQt5 import QtCore, QtWidgets, QtGui
 from ui.widget_2 import Ui_SettingsWidget
@@ -16,8 +17,11 @@ class SettingsWidget(QtWidgets.QFrame):
         self.action_1 = QtWidgets.QAction("Добавить файл")
         self.action_2 = QtWidgets.QAction("Добавить папку")
         self.menu.addActions([self.action_1, self.action_2])
+        self.blur_eff = QtWidgets.QGraphicsBlurEffect()
         self.connections()
         self._old_pos = None
+        self.extensions = (".png", ".jpg", ".jpeg")
+        self.stackedWidget = self.p.ui.stackedWidget
 
     def mousePressEvent(self, event):
         if event.button() == QtCore.Qt.LeftButton:
@@ -47,35 +51,18 @@ class SettingsWidget(QtWidgets.QFrame):
     def show_context_menu(self, point):
         self.menu.exec(self.ui.tB.mapToGlobal(QtCore.QPoint(10, 10)))
 
-    def setPixmap(self, path, mode=None):
-        self.p.ui.l_back_img.setPixmap(QtGui.QPixmap(path))
-        if mode == 1:
-            try:
-                self.p.ui.l_back_img.setPixmap(QtGui.QPixmap(f"{path}\{random.choice(os.listdir(path))}"))
-            except:
-                pass
+    def clear_stack_widget(self):
+        for children in self.stackedWidget.findChildren(QtWidgets.QLabel):
+            children.deleteLater()
 
-    def setMovie(self, movie):
-        self.p.ui.l_back_img.setMovie(QtGui.QMovie(movie))
-        self.p.ui.l_back_img.movie().start()
-
-    def setBackground(self, text):
-        ext = os.path.splitext(text)[1]
-        match ext:
-            case ".gif":
-                self.setMovie(text)
-            case ".png" | ".jpg":
-                self.setPixmap(text)
-            case "":
-                self.setPixmap(text, 1)
-            case _:
-                pass
 
     def selectFile(self):
         i0 = QtWidgets.QFileDialog.getOpenFileName(
             parent=self, caption="Выберите файл", directory=None, filter="Image (*.png *.jpg);; GIF (*.gif)")[0]
         if not i0:
             return
+        self.clear_stack_widget()
+        self.setBackground(path=i0, mode="File")
         self.ui.lE.setText(i0)
 
     def selectFolder(self):
@@ -83,10 +70,67 @@ class SettingsWidget(QtWidgets.QFrame):
             parent=self, caption="Выберите папку", directory=None)
         if not i0:
             return
+        self.clear_stack_widget()
+        self.setBackground(path=i0, mode="Folder")
         self.ui.lE.setText(i0)
+
+    def set_blur_img(self, value):
+        self.blur_eff.setBlurRadius(value)
+        self.stackedWidget.setGraphicsEffect(self.blur_eff)
+
+    def setBackground(self, path: str, mode: str):
+        self.stackedWidget.autoStop()
+        label = QtWidgets.QLabel(self.stackedWidget)
+        label.setObjectName(path)
+        label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        self.stackedWidget.addWidget(label)
+        match mode:
+            case "File":
+                ext = os.path.splitext(path)[1]
+                match ext:
+                    case ".gif":
+                        label.setMovie(QtGui.QMovie(path))
+                        label.movie().start()
+                    case ".png" | ".jpg":
+                        label.setPixmap(QtGui.QPixmap(path).scaled(
+                                self.stackedWidget.size(),
+                                QtCore.Qt.AspectRatioMode.IgnoreAspectRatio,
+                                QtCore.Qt.TransformationMode.SmoothTransformation))
+                    case _:
+                        pass
+            case "Folder":
+                try:
+                    for name in os.listdir(path):
+                        filename, file_ext = os.path.splitext(name)
+                        if not file_ext in self.extensions:
+                            continue
+                        label = QtWidgets.QLabel(self.stackedWidget)
+                        label.setObjectName(name)
+                        label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+                        #label.setMinimumSize(240, 160)
+                        label.setPixmap(
+                            QtGui.QPixmap(f"{path}/{name}").scaled(
+                                self.stackedWidget.size(),
+                                QtCore.Qt.AspectRatioMode.IgnoreAspectRatio,
+                                QtCore.Qt.TransformationMode.SmoothTransformation))
+                        label.setSizePolicy(
+                            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+                        self.stackedWidget.addWidget(label)
+                        self.stackedWidget.autoStart()
+                except Exception as ex:
+                    print(ex)
+            case _:
+                if os.path.isfile(path) == True:
+                    self.setBackground(path=path, mode="File")
+    def check_path(self, text):
+        if os.path.isfile(text) == True:
+            self.setBackground(text, "File")
+        else:
+            self.setBackground(text, "Folder")
 
     def connections(self):
         self.ui.tB.clicked.connect(self.show_context_menu)
-        self.ui.lE.textChanged.connect(self.setBackground)
         self.action_1.triggered.connect(self.selectFile)
         self.action_2.triggered.connect(self.selectFolder)
+        self.ui.lE.textChanged.connect(self.check_path)
+        self.ui.hS.valueChanged.connect(self.set_blur_img)

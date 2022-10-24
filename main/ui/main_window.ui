@@ -37,7 +37,7 @@
    <property name="frameShadow">
     <enum>QFrame::Raised</enum>
    </property>
-   <widget class="QLabel" name="l_back_img">
+   <widget class="SlidingStackedWidget" name="stackedWidget">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -45,9 +45,6 @@
       <width>1920</width>
       <height>1080</height>
      </rect>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
     </property>
    </widget>
   </widget>
@@ -273,6 +270,23 @@
      </item>
     </layout>
    </widget>
+   <widget class="QPushButton" name="btn_exit">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>20</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background: none;
+border: none;</string>
+    </property>
+    <property name="shortcut">
+     <string>4, 0, 4</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <customwidgets>
@@ -304,6 +318,12 @@
    <class>MybtnSettings</class>
    <extends>QPushButton</extends>
    <header>modified_elements.btn_settings.h</header>
+  </customwidget>
+  <customwidget>
+   <class>SlidingStackedWidget</class>
+   <extends>QStackedWidget</extends>
+   <header>widgets.sliding_stacked_widget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

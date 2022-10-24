@@ -121,7 +121,7 @@ class AudioWidget(QtWidgets.QFrame):
                 btn_mute.setIcon(self.icon)
                 btn_mute.setIconSize(QtCore.QSize(20, 20))
                 btn_mute.clicked.connect(
-                    lambda vol, name=hS.objectName(): self.mute(vol, name))
+                    lambda state, name=hS.objectName(): self.mute(name))
                 l_title = QtWidgets.QLabel()
                 l_title.setMinimumHeight(20)
                 l_title.setMaximumHeight(20)
@@ -153,7 +153,7 @@ class AudioWidget(QtWidgets.QFrame):
                 if slide.objectName() == label.objectName() == name:
                     label.setNum(value)
 
-    def mute(self, value, name):
+    def mute(self, name):
         sliders = []
         buttons = []
         for children in self.ui.sA.findChildren(QtWidgets.QPushButton):
@@ -163,7 +163,7 @@ class AudioWidget(QtWidgets.QFrame):
         for btn in buttons:
             for slide in sliders:
                 if slide.objectName() == btn.objectName() == name:
-                    slide.setValue(value)
+                    slide.setValue(0)
 
     def clear_layout(self, layout):
         if layout is not None:

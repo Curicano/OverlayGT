@@ -26,6 +26,9 @@ class Ui_MainWindow(object):
         self.l_back_img.setGeometry(QtCore.QRect(0, 0, 1920, 1080))
         self.l_back_img.setScaledContents(True)
         self.l_back_img.setObjectName("l_back_img")
+        self.stackedWidget = SlidingStackedWidget(self.f_main)
+        self.stackedWidget.setGeometry(QtCore.QRect(0, 0, 1920, 1080))
+        self.stackedWidget.setObjectName("stackedWidget")
         self.f_child = QtWidgets.QFrame(MainWindow)
         self.f_child.setGeometry(QtCore.QRect(0, 0, 1920, 1080))
         self.f_child.setObjectName("f_child")
@@ -110,6 +113,11 @@ class Ui_MainWindow(object):
         self.l_2.setAlignment(QtCore.Qt.AlignCenter)
         self.l_2.setObjectName("l_2")
         self.verticalLayout.addWidget(self.l_2)
+        self.btn_exit = QtWidgets.QPushButton(self.f_child)
+        self.btn_exit.setGeometry(QtCore.QRect(0, 0, 20, 20))
+        self.btn_exit.setStyleSheet("background: none;\n"
+"border: none;")
+        self.btn_exit.setObjectName("btn_exit")
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -117,8 +125,10 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         self.l_2.setText(_translate("MainWindow", "Copyright (c) 2022 | OSx"))
+        self.btn_exit.setShortcut(_translate("MainWindow", "4, 0, 4"))
 from modified_elements.btn_settings import MybtnSettings
 from widgets.audio_widget import AudioWidget
 from widgets.settings_widget import SettingsWidget
+from widgets.sliding_stacked_widget import SlidingStackedWidget
 from widgets.stats_widget import StatsWidget
 from widgets.translit_widget import TranslitWidget

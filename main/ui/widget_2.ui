@@ -203,7 +203,7 @@
       <item row="3" column="1">
        <widget class="QLabel" name="l_name_4">
         <property name="text">
-         <string>Убирается весь интерфейс кроме заднего фона. Включаеться по сочетанию клавишь Alt+1</string>
+         <string>Убирается весь интерфейс кроме фона. Включаеться по сочетанию клавиш Alt+1</string>
         </property>
         <property name="wordWrap">
          <bool>true</bool>
@@ -310,7 +310,11 @@
          <number>5</number>
         </property>
         <item>
-         <widget class="QLineEdit" name="lE"/>
+         <widget class="QLineEdit" name="lE">
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
         </item>
         <item>
          <widget class="QToolButton" name="tB">
