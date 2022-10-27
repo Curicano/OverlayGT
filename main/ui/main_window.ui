@@ -10,18 +10,6 @@
     <height>1080</height>
    </rect>
   </property>
-  <property name="minimumSize">
-   <size>
-    <width>1920</width>
-    <height>1080</height>
-   </size>
-  </property>
-  <property name="maximumSize">
-   <size>
-    <width>1920</width>
-    <height>1080</height>
-   </size>
-  </property>
   <widget class="QFrame" name="f_main">
    <property name="geometry">
     <rect>

@@ -267,26 +267,24 @@ class MyWidget(QtWidgets.QMainWindow):
         self.ui.tB.clicked.connect(self.ui.SettingsWidget.show_context_menu)
         self.ui.l_time.clicked.connect(lambda: self.sh(self.ui.TimeWidget))
 
-
 def my_excepthook(t, v, tb):
-    with open('1.txt', 'a') as f:
+    with open(path + 'log.txt', 'a') as f:
         f.write("\n---===Error===---\n")
-        f.write("Time = %s\n" % datetime.now().strftime("%d.%m.%Y"))
+        f.write("Time = %s\n" % datetime.now())
         traceback.print_exception(t, v, tb, file=f)
 
-
 if __name__ == "__main__":
-    #sys.excepthook = my_excepthook
+    sys.excepthook = my_excepthook
     Reg = OpenKeyEx(HKEY_LOCAL_MACHINE,
                     r'SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\OverlayGT.exe', 0, KEY_READ)
     path = QueryValue(Reg, "")
     Reg.Close()
-    path = f"{os.path.dirname(os.path.abspath(path))}\\settings"
+    path = f"{os.path.dirname(os.path.abspath(path))}\\"
     deen = Crypter()
-    deen.decrypt(path + ".cw")
+    deen.decrypt(path + "settings.cw")
     cfg = ConfigParser()
-    cfg.read(path + ".ini")
-    deen.encrypt(path + ".ini")
+    cfg.read(path + "settings.ini")
+    deen.encrypt(path + "settings.ini")
     for arg in sys.argv:
         match arg:
             case "-autostart":

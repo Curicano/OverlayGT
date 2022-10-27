@@ -15,8 +15,6 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1920, 1080)
-        MainWindow.setMinimumSize(QtCore.QSize(1920, 1080))
-        MainWindow.setMaximumSize(QtCore.QSize(1920, 1080))
         self.f_main = QtWidgets.QFrame(MainWindow)
         self.f_main.setGeometry(QtCore.QRect(0, 0, 1920, 1080))
         self.f_main.setFrameShape(QtWidgets.QFrame.StyledPanel)
