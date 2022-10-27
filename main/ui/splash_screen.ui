@@ -136,8 +136,18 @@
                    <height>30</height>
                   </size>
                  </property>
+                 <property name="font">
+                  <font>
+                   <family>Biennale Black</family>
+                   <pointsize>12</pointsize>
+                   <weight>10</weight>
+                   <italic>false</italic>
+                   <bold>false</bold>
+                  </font>
+                 </property>
                  <property name="styleSheet">
-                  <string notr="true">color: rgb(255, 200, 200)</string>
+                  <string notr="true">color: rgb(255, 200, 200);
+font-size: 12pt</string>
                  </property>
                  <property name="text">
                   <string>OverlayGT</string>

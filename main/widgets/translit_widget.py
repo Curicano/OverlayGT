@@ -1,7 +1,7 @@
+from time import sleep
 from PyQt5 import QtCore, QtWidgets, QtGui
 from translate import Translator
 from image import res
-from ui.widget_1 import Ui_TranslitWidget
 
 
 class Thread(QtCore.QThread):
@@ -10,9 +10,9 @@ class Thread(QtCore.QThread):
     def __init__(self, parent=None):
         super(Thread, self).__init__(parent=parent)
         self.parent = parent
-        self.setParent(parent)
 
     def run(self):
+        sleep(1)
         text = self.parent.ui.tE_1.toPlainText()
         if self.parent.ui.l_from_lang.text() == "Русский":
             self.from_lang = "ru"
@@ -39,23 +39,12 @@ class Thread(QtCore.QThread):
 class TranslitWidget(QtWidgets.QFrame):
     def __init__(self, parent=None):
         QtWidgets.QFrame.__init__(self, parent=parent)
-        self.ui = Ui_TranslitWidget()
-        self.ui.setupUi(self)
-        self.rebuilder()
+        self.ui = parent.parent().ui
         self.thr = Thread(self)
         self.connections()
         self.to_lang = "en"
         self.from_lang = "ru"
         self._old_pos = None
-
-    def rebuilder(self):
-        self.menu = QtWidgets.QMenu(self.ui.tE_1)
-        self.menu_2 = QtWidgets.QMenu(self.ui.tE_2)
-        self.sep = self.menu.addSeparator()
-        self.menu.addActions([self.ui.action_1, self.ui.action_2, self.menu.addSeparator(), self.ui.action_3,
-                             self.ui.action_4, self.ui.action_5, self.ui.action_6, self.menu.addSeparator(), self.ui.action_7])
-        self.menu_2.addActions(
-            [self.ui.action_4, self.menu_2.addSeparator(), self.ui.action_7])
 
     def translit(self):
         self.thr.terminate()
@@ -98,18 +87,5 @@ class TranslitWidget(QtWidgets.QFrame):
         delta = event.pos() - self._old_pos
         self.move(self.pos() + delta)
 
-    def show_context_menu(self, point):
-        self.menu.exec(self.ui.tE_1.mapToGlobal(point))
-
-    def show_context_menu_2(self, point):
-        self.menu_2.exec(self.ui.tE_2.mapToGlobal(point))
-
     def connections(self):
-        self.ui.btn_swap_lang.clicked.connect(self.swap_lang)
-        self.ui.tE_1.textChanged.connect(self.translit)
-        self.ui.btn_translite.clicked.connect(self.translit)
-        self.ui.tE_1.customContextMenuRequested.connect(
-            self.show_context_menu)
-        self.ui.tE_2.customContextMenuRequested.connect(
-            self.show_context_menu_2)
         self.thr.signal.connect(lambda text: self.ui.tE_2.setText(text))

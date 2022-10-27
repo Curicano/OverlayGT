@@ -1,8 +1,5 @@
 import os
-from pydoc import ispath
-import random
 from PyQt5 import QtCore, QtWidgets, QtGui
-from ui.widget_2 import Ui_SettingsWidget
 from image import res
 
 
@@ -10,8 +7,7 @@ class SettingsWidget(QtWidgets.QFrame):
 
     def __init__(self, parent=None):
         QtWidgets.QFrame.__init__(self, parent=parent)
-        self.ui = Ui_SettingsWidget()
-        self.ui.setupUi(self)
+        self.ui = parent.parent().ui
         self.p = self.parent().parent()
         self.menu = QtWidgets.QMenu(self)
         self.action_1 = QtWidgets.QAction("Добавить файл")
@@ -129,8 +125,5 @@ class SettingsWidget(QtWidgets.QFrame):
             self.setBackground(text, "Folder")
 
     def connections(self):
-        self.ui.tB.clicked.connect(self.show_context_menu)
         self.action_1.triggered.connect(self.selectFile)
         self.action_2.triggered.connect(self.selectFolder)
-        self.ui.lE.textChanged.connect(self.check_path)
-        self.ui.hS.valueChanged.connect(self.set_blur_img)

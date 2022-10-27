@@ -1,26 +1,23 @@
-from PyQt5 import QtCore, QtWidgets, QtGui
-from ui.widget_0 import Ui_AudioWidget
-from volume_control import V
-from image import res
 import pyautogui as pg
+from image import res
+from PyQt5 import QtCore, QtGui, QtWidgets
+from volume_control import V
 
 
 class AudioWidget(QtWidgets.QFrame):
     def __init__(self, parent=None):
         QtWidgets.QFrame.__init__(self, parent=parent)
-        self.ui = Ui_AudioWidget()
-        self.ui.setupUi(self)
-        self.connections()
+        self.ui = parent.parent().ui
         self.volume_control = V()
         self.icon = QtGui.QIcon()
         self.icon.addPixmap(QtGui.QPixmap(":/img/img_7.png"),
                             QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.icon_1 = QtGui.QIcon()
         self.icon_1.addPixmap(QtGui.QPixmap(":/img/img_15.png"),
-                            QtGui.QIcon.Normal, QtGui.QIcon.Off)
+                              QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.icon_2 = QtGui.QIcon()
         self.icon_2.addPixmap(QtGui.QPixmap(":/img/img_16.png"),
-                            QtGui.QIcon.Normal, QtGui.QIcon.Off)
+                              QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.fonts = QtGui.QFont("Biennale Black", 10)
         self.animation = QtCore.QPropertyAnimation(self, b"size")
         self.animation.setStartValue(QtCore.QSize(320, 140))
@@ -28,8 +25,7 @@ class AudioWidget(QtWidgets.QFrame):
         self.animation.setDuration(500)
         self.animation.setEasingCurve(QtCore.QEasingCurve.Type.InOutQuint)
         self.animation.setDirection(self.animation.Direction.Backward)
-        self.animation.start()
-        self.state = 1
+        self.state = 0
         self._old_pos = None
 
     def startAnim(self):
@@ -174,9 +170,3 @@ class AudioWidget(QtWidgets.QFrame):
                     widget.deleteLater()
                 else:
                     self.clear_layout(item.layout())
-
-    def connections(self):
-        self.ui.btn_prev.clicked.connect(lambda: pg.press("prevtrack"))
-        self.ui.btn_next.clicked.connect(lambda: pg.press("nexttrack"))
-        self.ui.btn_pp.clicked.connect(lambda: pg.press("playpause"))
-        self.ui.btn_move.clicked.connect(self.startAnim)
