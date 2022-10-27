@@ -5,6 +5,9 @@ from volume_control import V
 
 
 class AudioWidget(QtWidgets.QFrame):
+    state = 1
+    _old_pos = None
+
     def __init__(self, parent=None):
         QtWidgets.QFrame.__init__(self, parent=parent)
         self.ui = parent.parent().ui
@@ -25,20 +28,21 @@ class AudioWidget(QtWidgets.QFrame):
         self.animation.setDuration(500)
         self.animation.setEasingCurve(QtCore.QEasingCurve.Type.InOutQuint)
         self.animation.setDirection(self.animation.Direction.Backward)
-        self.state = 0
-        self._old_pos = None
+        self.animation.start()
 
     def startAnim(self):
         if self.state == 0:
             self.animation.setDirection(self.animation.Direction.Backward)
+            self.animation.finished.connect(
+                lambda: self.ui.btn_move.setIcon(self.icon_2))
             self.animation.start()
             self.state = 1
-            self.ui.btn_move.setIcon(self.icon_2)
         else:
             self.animation.setDirection(self.animation.Direction.Forward)
+            self.animation.finished.connect(
+                lambda: self.ui.btn_move.setIcon(self.icon_1))
             self.animation.start()
             self.state = 0
-            self.ui.btn_move.setIcon(self.icon_1)
 
     def showEvent(self, a0: QtGui.QShowEvent):
         self.volume_start()

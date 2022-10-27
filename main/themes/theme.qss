@@ -72,6 +72,9 @@ QComboBox::down-arrow {
 	image: url(:/img/img_10.png);
     min-width: 20;
 }
+#btn_move {
+    border-radius: 0px;
+}
 #lE, #lE_2, #tB {
 	color: rgb(255, 255, 255);
 	border: 1px solid color255;

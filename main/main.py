@@ -150,11 +150,11 @@ class MyWidget(QtWidgets.QMainWindow):
         self.ui.cBox_4.setCheckState(
             int(cfg["settings"]["stat_download"]))
         self.ui.AudioWidget.move(
-            int(cfg["audio_widget_pos"]["x"]), int(cfg["audio_widget_pos"]["y"]))
+            int(cfg["audio_widget"]["posx"]), int(cfg["audio_widget"]["posy"]))
         self.ui.SettingsWidget.move(
-            int(cfg["settings_widget_pos"]["x"]), int(cfg["settings_widget_pos"]["y"]))
+            int(cfg["settings_widget"]["posx"]), int(cfg["settings_widget"]["posy"]))
         self.ui.TranslitWidget.move(
-            int(cfg["translit_widget_pos"]["x"]), int(cfg["translit_widget_pos"]["y"]))
+            int(cfg["translit_widget"]["posx"]), int(cfg["translit_widget"]["posy"]))
 
     def show(self):
         return super().showFullScreen(), super().setFocus()
@@ -191,12 +191,12 @@ class MyWidget(QtWidgets.QMainWindow):
                            "stat_ping": f"{self.ui.cBox_3.checkState()}",
                            "stat_download": f"{self.ui.cBox_4.checkState()}"
                            }
-        cfg["audio_widget_pos"] = {"x": f"{self.ui.AudioWidget.pos().x()}",
-                                   "y": f"{self.ui.AudioWidget.pos().y()}"}
-        cfg["settings_widget_pos"] = {"x": f"{self.ui.SettingsWidget.pos().x()}",
-                                      "y": f"{self.ui.SettingsWidget.pos().y()}"}
-        cfg["translit_widget_pos"] = {"x": f"{self.ui.TranslitWidget.pos().x()}",
-                                      "y": f"{self.ui.TranslitWidget.pos().y()}"}
+        cfg["audio_widget"] = {"posx": f"{self.ui.AudioWidget.pos().x()}",
+                               "posy": f"{self.ui.AudioWidget.pos().y()}"}
+        cfg["settings_widget"] = {"posx": f"{self.ui.SettingsWidget.pos().x()}",
+                                  "posy": f"{self.ui.SettingsWidget.pos().y()}"}
+        cfg["translit_widget"] = {"posx": f"{self.ui.TranslitWidget.pos().x()}",
+                                  "posy": f"{self.ui.TranslitWidget.pos().y()}"}
         deen.decrypt(path + "settings.ccw")
         with open(path + "settings.ini", "w+") as file:
             cfg.write(file)
