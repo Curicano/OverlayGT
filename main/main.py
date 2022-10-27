@@ -31,7 +31,7 @@ class Crypter():
     def encrypt(self, file):
         ext = os.path.splitext(file)[0]
         pyAesCrypt.encryptFile(
-            file, ext.lower() + ".cw", self.password, self.buffer)
+            file, ext.lower() + ".ccw", self.password, self.buffer)
         os.remove(file)
 
     def decrypt(self, file):
@@ -52,27 +52,25 @@ class HotKey(QtCore.QObject):
 
 
 class MyWidget(QtWidgets.QMainWindow):
+    state = 0
+
     def __init__(self):
-        super().__init__()
+        QtWidgets.QMainWindow.__init__(self)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        self.splash_screen = SplashScreen(self)
+        self.tray()
         self.hot_key = HotKey()
-        #self.path_to_themes = self.resource_path(
-        #    "Git\\OverlayGT 2.0\\main\\themes")
         self.path_to_resource = self.resource_path("themes")
         self.connections()
         self.rebuilder()
         self.create_menu()
-        self.tray()
+        self.splash_screen = SplashScreen(self)
         if cfg["settings"]["launch_hidden"] == "0":
             self.sh(self.splash_screen)
-        self.state = 0
 
     def create_menu(self):
         self.menu = QtWidgets.QMenu(self.ui.tE_1)
         self.menu_2 = QtWidgets.QMenu(self.ui.tE_2)
-        self.sep = self.menu.addSeparator()
         self.menu.addActions([self.ui.action_1, self.ui.action_2, self.menu.addSeparator(), self.ui.action_3,
                              self.ui.action_4, self.ui.action_5, self.ui.action_6, self.menu.addSeparator(), self.ui.action_7])
         self.menu_2.addActions(
@@ -85,24 +83,25 @@ class MyWidget(QtWidgets.QMainWindow):
         self.menu_2.exec(self.ui.tE_2.mapToGlobal(point))
 
     def tray(self):
-        self.tray_icon = QtWidgets.QSystemTrayIcon(self)
+        tray_icon = QtWidgets.QSystemTrayIcon(self)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/img/logo.ico"),
-                            QtGui.QIcon.Normal, QtGui.QIcon.On)
-        self.tray_icon.setIcon(icon)
-        self.quit_action = QtWidgets.QAction("Выйти", self)
-        self.quit_action.triggered.connect(self.close)
-        self.show_action = QtWidgets.QAction("Показать", self)
-        self.show_action.triggered.connect(self.sh_self)
-        self.check_upd_action = QtWidgets.QAction("Проверить обновления", self)
-        self.check_upd_action.triggered.connect(self.check_upd)
-        self.tray_menu = QtWidgets.QMenu()
-        self.tray_menu.addActions(
-            [self.quit_action, self.show_action, self.check_upd_action])
-        self.tray_icon.setContextMenu(self.tray_menu)
-        self.tray_icon.setToolTip(
+                       QtGui.QIcon.Normal, QtGui.QIcon.On)
+        tray_icon.setIcon(icon)
+        quit_action = QtWidgets.QAction("Выйти", self)
+        quit_action.triggered.connect(self.close)
+        show_action = QtWidgets.QAction("Показать", self)
+        show_action.triggered.connect(self.sh_self)
+        check_upd_action = QtWidgets.QAction(
+            "Проверить обновления", self)
+        check_upd_action.triggered.connect(self.check_upd)
+        tray_menu = QtWidgets.QMenu()
+        tray_menu.addActions(
+            [quit_action, show_action, check_upd_action])
+        tray_icon.setContextMenu(tray_menu)
+        tray_icon.setToolTip(
             f"{NAME} {VERSION}")
-        self.tray_icon.show()
+        tray_icon.show()
 
     def rebuilder(self):
         self.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground)
@@ -198,10 +197,10 @@ class MyWidget(QtWidgets.QMainWindow):
                                       "y": f"{self.ui.SettingsWidget.pos().y()}"}
         cfg["translit_widget_pos"] = {"x": f"{self.ui.TranslitWidget.pos().x()}",
                                       "y": f"{self.ui.TranslitWidget.pos().y()}"}
-        deen.decrypt(path + ".cw")
-        with open(path + ".ini", "w+") as file:
+        deen.decrypt(path + "settings.ccw")
+        with open(path + "settings.ini", "w+") as file:
             cfg.write(file)
-        deen.encrypt(path + ".ini")
+        deen.encrypt(path + "settings.ini")
 
     def close(self):
         self.save_settings()
@@ -267,11 +266,13 @@ class MyWidget(QtWidgets.QMainWindow):
         self.ui.tB.clicked.connect(self.ui.SettingsWidget.show_context_menu)
         self.ui.l_time.clicked.connect(lambda: self.sh(self.ui.TimeWidget))
 
+
 def my_excepthook(t, v, tb):
     with open(path + 'log.txt', 'a') as f:
         f.write("\n---===Error===---\n")
         f.write("Time = %s\n" % datetime.now())
         traceback.print_exception(t, v, tb, file=f)
+
 
 if __name__ == "__main__":
     sys.excepthook = my_excepthook
@@ -281,7 +282,7 @@ if __name__ == "__main__":
     Reg.Close()
     path = f"{os.path.dirname(os.path.abspath(path))}\\"
     deen = Crypter()
-    deen.decrypt(path + "settings.cw")
+    deen.decrypt(path + "settings.ccw")
     cfg = ConfigParser()
     cfg.read(path + "settings.ini")
     deen.encrypt(path + "settings.ini")
