@@ -1,21 +1,21 @@
-import os
+from os import remove
+from os.path import splitext, abspath, join, dirname
 import sys
 import traceback
-import webbrowser
+from webbrowser import open
 from configparser import ConfigParser
 from datetime import datetime
 from winreg import HKEY_LOCAL_MACHINE, KEY_READ, OpenKeyEx, QueryValue
 
-import pyAesCrypt
-import pyautogui as pg
-import win32api
+from pyAesCrypt import encryptFile, decryptFile
+from pyautogui import press
+from win32api import LoadKeyboardLayout
 from keyboard import add_hotkey
 from PyQt5 import QtCore, QtGui, QtWidgets, QtWinExtras
 
 from image import res
 from themes import themes
 from ui.main_window import Ui_MainWindow
-from volume_control import V
 from widgets.splash_screen import SplashScreen
 
 NAME = "OverlayGT"
@@ -29,16 +29,16 @@ class Crypter():
         self.buffer = 512*1024
 
     def encrypt(self, file):
-        ext = os.path.splitext(file)[0]
-        pyAesCrypt.encryptFile(
+        ext = splitext(file)[0]
+        encryptFile(
             file, ext.lower() + ".ccw", self.password, self.buffer)
-        os.remove(file)
+        remove(file)
 
     def decrypt(self, file):
-        ext = os.path.splitext(file)[0]
-        pyAesCrypt.decryptFile(
+        ext = splitext(file)[0]
+        decryptFile(
             file, ext.lower() + ".ini", self.password, self.buffer)
-        os.remove(file)
+        remove(file)
 
 
 class HotKey(QtCore.QObject):
@@ -46,7 +46,7 @@ class HotKey(QtCore.QObject):
 
     def __init__(self):
         super().__init__()
-        win32api.LoadKeyboardLayout("00000419", 1)
+        LoadKeyboardLayout("00000419", 1)
         add_hotkey(
             "alt + ё", self.sh.emit, suppress=True, trigger_on_release=True)
 
@@ -220,15 +220,15 @@ class MyWidget(QtWidgets.QMainWindow):
             obj.show()
 
     def check_upd(self):
-        webbrowser.open(
+        open(
             "https://github.com/Curicano/OverlayGT-2.0", new=0, autoraise=True)
 
     def resource_path(self, relative_path):
         try:
             base_path = sys._MEIPASS
         except Exception:
-            base_path = os.path.abspath(".")
-        return os.path.join(base_path, relative_path)
+            base_path = abspath(".")
+        return join(base_path, relative_path)
 
     def connections(self):
         self.hot_key.sh.connect(self.sh_self)
@@ -249,9 +249,9 @@ class MyWidget(QtWidgets.QMainWindow):
             lambda name: themes.select_theme(self, self.path_to_resource, name))
         self.ui.btn_save.clicked.connect(self.save_settings)
         self.ui.btn_exit.clicked.connect(self.close)
-        self.ui.btn_prev.clicked.connect(lambda: pg.press("prevtrack"))
-        self.ui.btn_next.clicked.connect(lambda: pg.press("nexttrack"))
-        self.ui.btn_pp.clicked.connect(lambda: pg.press("playpause"))
+        self.ui.btn_prev.clicked.connect(lambda: press("prevtrack"))
+        self.ui.btn_next.clicked.connect(lambda: press("nexttrack"))
+        self.ui.btn_pp.clicked.connect(lambda: press("playpause"))
         self.ui.btn_move.clicked.connect(self.ui.AudioWidget.startAnim)
         self.ui.btn_swap_lang.clicked.connect(self.ui.TranslitWidget.swap_lang)
         self.ui.tE_1.textChanged.connect(self.ui.TranslitWidget.translit)
@@ -280,7 +280,7 @@ if __name__ == "__main__":
                     r'SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\OverlayGT.exe', 0, KEY_READ)
     path = QueryValue(Reg, "")
     Reg.Close()
-    path = f"{os.path.dirname(os.path.abspath(path))}\\"
+    path = f"{dirname(abspath(path))}\\"
     deen = Crypter()
     deen.decrypt(path + "settings.ccw")
     cfg = ConfigParser()
