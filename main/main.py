@@ -2,7 +2,7 @@ from os import remove
 from os.path import splitext, abspath, join, dirname
 import sys
 import traceback
-from webbrowser import open
+import webbrowser as web
 from configparser import ConfigParser
 from datetime import datetime
 from winreg import HKEY_LOCAL_MACHINE, KEY_READ, OpenKeyEx, QueryValue
@@ -220,7 +220,7 @@ class MyWidget(QtWidgets.QMainWindow):
             obj.show()
 
     def check_upd(self):
-        open(
+        web.open(
             "https://github.com/Curicano/OverlayGT-2.0", new=0, autoraise=True)
 
     def resource_path(self, relative_path):
