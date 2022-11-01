@@ -1,44 +1,23 @@
-from os import remove
-from os.path import splitext, abspath, join, dirname
 import sys
 import traceback
 import webbrowser as web
-from configparser import ConfigParser
 from datetime import datetime
+from os.path import abspath, dirname, join
 from winreg import HKEY_LOCAL_MACHINE, KEY_READ, OpenKeyEx, QueryValue
 
-from pyAesCrypt import encryptFile, decryptFile
-from pyautogui import press
-from win32api import LoadKeyboardLayout
 from keyboard import add_hotkey
+from pyautogui import press
 from PyQt5 import QtCore, QtGui, QtWidgets, QtWinExtras
+from win32api import LoadKeyboardLayout
 
+from config_rw import Config
 from image import res
 from themes import themes
 from ui.main_window import Ui_MainWindow
 from widgets.splash_screen import SplashScreen
-
+# сделать сохранение настроек в другом потоке
 NAME = "OverlayGT"
 VERSION = "v0.0.0.3"
-
-
-class Crypter():
-    def __init__(self):
-        super().__init__()
-        self.password = "0000"
-        self.buffer = 512*1024
-
-    def encrypt(self, file):
-        ext = splitext(file)[0]
-        encryptFile(
-            file, ext.lower() + ".ccw", self.password, self.buffer)
-        remove(file)
-
-    def decrypt(self, file):
-        ext = splitext(file)[0]
-        decryptFile(
-            file, ext.lower() + ".ini", self.password, self.buffer)
-        remove(file)
 
 
 class HotKey(QtCore.QObject):
@@ -55,17 +34,21 @@ class MyWidget(QtWidgets.QMainWindow):
     state = 0
 
     def __init__(self):
-        QtWidgets.QMainWindow.__init__(self)
+        QtWidgets.QMainWindow.__init__(self, flags=QtCore.Qt.WindowType.WindowStaysOnTopHint |
+                                       QtCore.Qt.WindowType.FramelessWindowHint | QtCore.Qt.WindowType.Tool)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.tray()
         self.hot_key = HotKey()
+        self.conf = Config(directory)
+        self.cfg = self.conf.read()
         self.path_to_resource = self.resource_path("themes")
         self.connections()
+        self.animation()
         self.rebuilder()
         self.create_menu()
         self.splash_screen = SplashScreen(self)
-        if cfg["settings"]["launch_hidden"] == "0":
+        if self.cfg["settings"]["launch_hidden"] == "0":
             self.sh(self.splash_screen)
 
     def create_menu(self):
@@ -83,42 +66,27 @@ class MyWidget(QtWidgets.QMainWindow):
         self.menu_2.exec(self.ui.tE_2.mapToGlobal(point))
 
     def tray(self):
-        tray_icon = QtWidgets.QSystemTrayIcon(self)
+        self.tray_icon = QtWidgets.QSystemTrayIcon(self)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/img/logo.ico"),
                        QtGui.QIcon.Normal, QtGui.QIcon.On)
-        tray_icon.setIcon(icon)
-        quit_action = QtWidgets.QAction("Выйти", self)
-        quit_action.triggered.connect(self.close)
-        show_action = QtWidgets.QAction("Показать", self)
-        show_action.triggered.connect(self.sh_self)
-        check_upd_action = QtWidgets.QAction(
+        self.tray_icon.setIcon(icon)
+        self.quit_action = QtWidgets.QAction("Выйти", self)
+        self.quit_action.triggered.connect(self.close)
+        self.show_action = QtWidgets.QAction("Показать", self)
+        self.show_action.triggered.connect(self.sh_self)
+        self.check_upd_action = QtWidgets.QAction(
             "Проверить обновления", self)
-        check_upd_action.triggered.connect(self.check_upd)
-        tray_menu = QtWidgets.QMenu()
-        tray_menu.addActions(
-            [quit_action, show_action, check_upd_action])
-        tray_icon.setContextMenu(tray_menu)
-        tray_icon.setToolTip(
+        self.check_upd_action.triggered.connect(self.check_upd)
+        self.tray_menu = QtWidgets.QMenu()
+        self.tray_menu.addActions(
+            [self.quit_action, self.show_action, self.check_upd_action])
+        self.tray_icon.setContextMenu(self.tray_menu)
+        self.tray_icon.setToolTip(
             f"{NAME} {VERSION}")
-        tray_icon.show()
+        self.tray_icon.show()
 
-    def rebuilder(self):
-        self.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground)
-        self.setWindowFlags(QtCore.Qt.WindowType.WindowStaysOnTopHint |
-                            QtCore.Qt.WindowType.FramelessWindowHint | QtCore.Qt.WindowType.Tool)
-        self.ui.AudioWidget.hide()
-        self.ui.TranslitWidget.hide()
-        self.ui.SettingsWidget.hide()
-        self.ui.VersionWidget.hide()
-        self.ui.VersionWidget.move(QtCore.QPoint(1080, 55))
-        self.ui.TimeWidget.hide()
-        self.ui.TimeWidget.move(QtCore.QPoint(870, 120))
-        self.ui.l_stat.hide()
-        self.ui.l_stat_1.hide()
-        self.ui.l_stat_2.hide()
-        self.ui.l_1.setText(
-            f"{NAME} {VERSION} (Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro})")
+    def animation(self):
         self.show_anim = QtCore.QPropertyAnimation(self, b"windowOpacity")
         self.show_anim.setDuration(500)
         self.show_anim.setStartValue(0)
@@ -135,26 +103,41 @@ class MyWidget(QtWidgets.QMainWindow):
         self.group_anim.addAnimation(self.show_anim)
         self.group_anim.addAnimation(self.show_anim_2)
 
-        self.ui.cB.setCurrentText(cfg["settings"]["theme"])
+    def rebuilder(self):
+        self.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground)
+        self.ui.AudioWidget.hide()
+        self.ui.TranslitWidget.hide()
+        self.ui.SettingsWidget.hide()
+        self.ui.VersionWidget.hide()
+        self.ui.VersionWidget.move(QtCore.QPoint(1080, 55))
+        self.ui.TimeWidget.hide()
+        self.ui.TimeWidget.move(QtCore.QPoint(870, 120))
+        self.ui.l_stat.hide()
+        self.ui.l_stat_1.hide()
+        self.ui.l_stat_2.hide()
+        self.ui.l_1.setText(
+            f"{NAME} {VERSION} (Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro})")
+
+        self.ui.cB.setCurrentText(self.cfg["settings"]["theme"])
         self.ui.lE.setText(
-            cfg["settings"]["background_image"])
-        self.ui.hS_2.setValue(int(cfg["settings"]["blur"]))
+            self.cfg["settings"]["background"])
+        self.ui.hS_2.setValue(int(self.cfg["settings"]["blur"]))
         self.ui.cBox.setCheckState(
-            int(cfg["settings"]["autostart"]))
+            int(self.cfg["settings"]["autostart"]))
         self.ui.cBox_1.setCheckState(
-            int(cfg["settings"]["launch_hidden"]))
+            int(self.cfg["settings"]["launch_hidden"]))
         self.ui.cBox_2.setCheckState(
-            int(cfg["settings"]["stat_time_startup"]))
+            int(self.cfg["settings"]["stat_time_startup"]))
         self.ui.cBox_3.setCheckState(
-            int(cfg["settings"]["stat_ping"]))
+            int(self.cfg["settings"]["stat_ping"]))
         self.ui.cBox_4.setCheckState(
-            int(cfg["settings"]["stat_download"]))
+            int(self.cfg["settings"]["stat_download"]))
         self.ui.AudioWidget.move(
-            int(cfg["audio_widget"]["posx"]), int(cfg["audio_widget"]["posy"]))
+            int(self.cfg["audio_widget"]["posx"]), int(self.cfg["audio_widget"]["posy"]))
         self.ui.SettingsWidget.move(
-            int(cfg["settings_widget"]["posx"]), int(cfg["settings_widget"]["posy"]))
+            int(self.cfg["settings_widget"]["posx"]), int(self.cfg["settings_widget"]["posy"]))
         self.ui.TranslitWidget.move(
-            int(cfg["translit_widget"]["posx"]), int(cfg["translit_widget"]["posy"]))
+            int(self.cfg["translit_widget"]["posx"]), int(self.cfg["translit_widget"]["posy"]))
 
     def show(self):
         return super().showFullScreen(), super().setFocus()
@@ -182,25 +165,23 @@ class MyWidget(QtWidgets.QMainWindow):
             self.show()
 
     def save_settings(self):
-        cfg["settings"] = {"theme": f"{self.ui.cB.currentText()}",
-                           "background_image": f"{self.ui.lE.text()}",
-                           "blur": f"{self.ui.hS_2.value()}",
-                           "autostart": f"{self.ui.cBox.checkState()}",
-                           "launch_hidden": f"{self.ui.cBox_1.checkState()}",
-                           "stat_time_startup": f"{self.ui.cBox_2.checkState()}",
-                           "stat_ping": f"{self.ui.cBox_3.checkState()}",
-                           "stat_download": f"{self.ui.cBox_4.checkState()}"
-                           }
-        cfg["audio_widget"] = {"posx": f"{self.ui.AudioWidget.pos().x()}",
-                               "posy": f"{self.ui.AudioWidget.pos().y()}"}
-        cfg["settings_widget"] = {"posx": f"{self.ui.SettingsWidget.pos().x()}",
-                                  "posy": f"{self.ui.SettingsWidget.pos().y()}"}
-        cfg["translit_widget"] = {"posx": f"{self.ui.TranslitWidget.pos().x()}",
-                                  "posy": f"{self.ui.TranslitWidget.pos().y()}"}
-        deen.decrypt(path + "settings.ccw")
-        with open(path + "settings.ini", "w+") as file:
-            cfg.write(file)
-        deen.encrypt(path + "settings.ini")
+        self.conf.cfg["settings"] = {
+            "theme": f"{self.ui.cB.currentText()}",
+            "background": f"{self.ui.lE.text()}",
+            "blur": f"{self.ui.hS_2.value()}",
+            "autostart": f"{self.ui.cBox.checkState()}",
+            "launch_hidden": f"{self.ui.cBox_1.checkState()}",
+            "stat_time_startup": f"{self.ui.cBox_2.checkState()}",
+            "stat_ping": f"{self.ui.cBox_3.checkState()}",
+            "stat_download": f"{self.ui.cBox_4.checkState()}",
+        }
+        self.conf.cfg["audio_widget"] = {"posx": f"{self.ui.AudioWidget.pos().x()}",
+                                         "posy": f"{self.ui.AudioWidget.pos().y()}"}
+        self.conf.cfg["settings_widget"] = {"posx": f"{self.ui.SettingsWidget.pos().x()}",
+                                            "posy": f"{self.ui.SettingsWidget.pos().y()}"}
+        self.conf.cfg["translit_widget"] = {"posx": f"{self.ui.TranslitWidget.pos().x()}",
+                                            "posy": f"{self.ui.TranslitWidget.pos().y()}"}
+        self.conf.write()
 
     def close(self):
         self.save_settings()
@@ -232,6 +213,7 @@ class MyWidget(QtWidgets.QMainWindow):
 
     def connections(self):
         self.hot_key.sh.connect(self.sh_self)
+        self.ui.btn_save.clicked.connect(self.save_settings)
         self.ui.btn_mixer.clicked.connect(lambda: self.sh(self.ui.AudioWidget))
         self.ui.btn_interpreter.clicked.connect(
             lambda: self.sh(self.ui.TranslitWidget))
@@ -243,11 +225,9 @@ class MyWidget(QtWidgets.QMainWindow):
             lambda: self.sh(self.ui.l_stat))
         self.ui.cBox_3.stateChanged.connect(
             lambda: self.sh(self.ui.l_stat_1))
-        self.ui.cBox_4.stateChanged.connect(
-            lambda: self.sh(self.ui.l_stat_2))
+        self.ui.cBox_4.stateChanged.connect(lambda: self.sh(self.ui.l_stat_2))
         self.ui.cB.currentTextChanged.connect(
             lambda name: themes.select_theme(self, self.path_to_resource, name))
-        self.ui.btn_save.clicked.connect(self.save_settings)
         self.ui.btn_exit.clicked.connect(self.close)
         self.ui.btn_prev.clicked.connect(lambda: press("prevtrack"))
         self.ui.btn_next.clicked.connect(lambda: press("nexttrack"))
@@ -261,14 +241,15 @@ class MyWidget(QtWidgets.QMainWindow):
         self.ui.tE_2.customContextMenuRequested.connect(
             self.show_context_menu_2)
         self.ui.lE.textChanged.connect(self.ui.SettingsWidget.check_path)
-        self.ui.hS_2.valueChanged.connect(self.ui.SettingsWidget.set_blur_img)
-        self.ui.hS_2.valueChanged.connect(self.ui.l_num_2.setNum)
+        self.ui.hS_2.valueChanged.connect(lambda value:
+                                          [self.ui.SettingsWidget.set_blur_img(value),
+                                           self.ui.l_num_2.setNum(value)])
         self.ui.tB.clicked.connect(self.ui.SettingsWidget.show_context_menu)
         self.ui.l_time.clicked.connect(lambda: self.sh(self.ui.TimeWidget))
 
 
 def my_excepthook(t, v, tb):
-    with open(path + 'log.txt', 'a') as f:
+    with open(directory + 'log.txt', 'a') as f:
         f.write("\n---===Error===---\n")
         f.write("Time = %s\n" % datetime.now())
         traceback.print_exception(t, v, tb, file=f)
@@ -278,14 +259,10 @@ if __name__ == "__main__":
     sys.excepthook = my_excepthook
     Reg = OpenKeyEx(HKEY_LOCAL_MACHINE,
                     r'SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\OverlayGT.exe', 0, KEY_READ)
-    path = QueryValue(Reg, "")
+    file = QueryValue(Reg, "")
+    directory = f"{dirname(abspath(file))}\\"
     Reg.Close()
-    path = f"{dirname(abspath(path))}\\"
-    deen = Crypter()
-    deen.decrypt(path + "settings.ccw")
-    cfg = ConfigParser()
-    cfg.read(path + "settings.ini")
-    deen.encrypt(path + "settings.ini")
+    cfg = Config(directory).read()
     for arg in sys.argv:
         match arg:
             case "-autostart":

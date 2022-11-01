@@ -1005,6 +1005,9 @@
               <height>16777215</height>
              </size>
             </property>
+            <property name="text">
+             <string>0</string>
+            </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
             </property>
@@ -1563,6 +1566,14 @@ border: none;</string>
      </item>
     </layout>
    </widget>
+   <zorder>TimeWidget</zorder>
+   <zorder>VersionWidget</zorder>
+   <zorder>AudioWidget</zorder>
+   <zorder>TranslitWidget</zorder>
+   <zorder>SettingsWidget</zorder>
+   <zorder>StatsWidget</zorder>
+   <zorder>btn_exit</zorder>
+   <zorder>f_menu</zorder>
   </widget>
   <action name="action_1">
    <property name="text">

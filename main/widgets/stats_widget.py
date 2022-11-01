@@ -40,4 +40,3 @@ class StatsWidget(QtWidgets.QFrame):
     def __init__(self, parent=None):
         QtWidgets.QFrame.__init__(self, parent=parent)
         self.thr = Thread(parent.parent())
-        self.thr.start(QtCore.QThread.Priority.LowestPriority)
