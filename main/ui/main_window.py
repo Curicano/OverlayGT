@@ -590,6 +590,7 @@ class Ui_MainWindow(object):
         self.action_7.setObjectName("action_7")
 
         self.retranslateUi(MainWindow)
+        self.cB.setCurrentIndex(-1)
         self.btn_hide.clicked.connect(self.AudioWidget.hide) # type: ignore
         self.hS.valueChanged['int'].connect(self.l_num.setNum) # type: ignore
         self.btn_hide_2.clicked.connect(self.TranslitWidget.hide) # type: ignore
