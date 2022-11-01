@@ -15,7 +15,6 @@ from image import res
 from themes import themes
 from ui.main_window import Ui_MainWindow
 from widgets.splash_screen import SplashScreen
-# сделать сохранение настроек в другом потоке
 NAME = "OverlayGT"
 VERSION = "v0.0.0.3"
 
