@@ -89,7 +89,13 @@ class SplashScreen(QtWidgets.QMainWindow):
     def update(self, parent):
         global counter
         self.progress.set_value(counter)
-        if counter >= 100:
+        if counter == 33:
+            self.ui.l_loading.setText("Loading.")
+        elif counter == 66:
+            self.ui.l_loading.setText("Loading..")
+        elif counter == 99:
+            self.ui.l_loading.setText("Loading...")
+        elif counter >= 100:
             self.timer.stop()
             parent.sh_self()
             self.hide()

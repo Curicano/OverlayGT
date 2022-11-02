@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'd:\Storage X\About\Programirovanie\Python\Git\OverlayGT 2.0\main\ui\splash_screen.ui'
+# Form implementation generated from reading ui file 'd:\Storage X\About\Programirovanie\Python\Git\OverlayGT 2.0\ui\splash_screen.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.7
 #
@@ -86,6 +86,7 @@ class Ui_SplashScreen(object):
 "    color: rgb(255, 200, 200);\n"
 "    background: rgb(60, 60, 60)\n"
 "}")
+        self.l_version.setText("")
         self.l_version.setAlignment(QtCore.Qt.AlignCenter)
         self.l_version.setObjectName("l_version")
         self.vL_5.addWidget(self.l_version, 0, QtCore.Qt.AlignHCenter)
@@ -105,6 +106,5 @@ class Ui_SplashScreen(object):
 
     def retranslateUi(self, SplashScreen):
         _translate = QtCore.QCoreApplication.translate
-        self.l_loading.setText(_translate("SplashScreen", "Loading..."))
+        self.l_loading.setText(_translate("SplashScreen", "Loading"))
         self.l_title.setText(_translate("SplashScreen", "OverlayGT"))
-        self.l_version.setText(_translate("SplashScreen", "v0.0.0.3"))

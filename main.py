@@ -16,7 +16,7 @@ from themes import themes
 from ui.main_window import Ui_MainWindow
 from widgets.splash_screen import SplashScreen
 NAME = "OverlayGT"
-VERSION = "v0.0.0.3"
+VERSION = "v0.0.0.4"
 
 
 class HotKey(QtCore.QObject):
@@ -40,13 +40,13 @@ class MyWidget(QtWidgets.QMainWindow):
         self.tray()
         self.hot_key = HotKey()
         self.conf = Config(directory)
+        self.splash_screen = SplashScreen(self)
         self.cfg = self.conf.read()
         self.path_to_resource = self.resource_path("themes")
         self.connections()
         self.animation()
         self.rebuilder()
         self.create_menu()
-        self.splash_screen = SplashScreen(self)
         if self.cfg["settings"]["launch_hidden"] == "0":
             self.sh(self.splash_screen)
 
@@ -116,6 +116,7 @@ class MyWidget(QtWidgets.QMainWindow):
         self.ui.l_stat_2.hide()
         self.ui.l_1.setText(
             f"{NAME} {VERSION} (Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro})")
+        self.splash_screen.ui.l_version.setText(VERSION)
 
         self.ui.cB.setCurrentText(self.cfg["settings"]["theme"])
         self.ui.lE.setText(

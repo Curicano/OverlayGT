@@ -121,7 +121,7 @@
                   <string notr="true">color: rgb(255, 200, 200)</string>
                  </property>
                  <property name="text">
-                  <string>Loading...</string>
+                  <string>Loading</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignCenter</set>
@@ -198,7 +198,7 @@ font-size: 12pt</string>
 }</string>
                     </property>
                     <property name="text">
-                     <string>v0.0.0.3</string>
+                     <string/>
                     </property>
                     <property name="alignment">
                      <set>Qt::AlignCenter</set>
