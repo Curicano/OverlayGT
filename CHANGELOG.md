@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - The mute\unmute buttons in the Audio tab change icons depending on the volume level.
+- MIT License
 
 ### Changed
 - Reduced the weight of the application.
@@ -23,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.0.0.3] - 2022-11-01
 
 ### Added
-- New themes
+- New themes.
 
 ### Changed
 - Some theme.
@@ -38,7 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Moving widgets across the screen.
-- "Audio" button.
+- Audio button.
 
 ## [0.0.0.1] - 2022-10-09
 - Initial release.
