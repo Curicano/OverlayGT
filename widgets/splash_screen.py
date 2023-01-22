@@ -1,30 +1,31 @@
-import sys
-from PyQt5 import QtCore, QtWidgets, QtGui
-from ui.splash_screen import Ui_SplashScreen
+from PyQt5.QtWidgets import QMainWindow, QWidget, QGraphicsDropShadowEffect
+from PyQt5.QtCore import Qt, QRect, QTimer, pyqtSignal
+from PyQt5.QtGui import QColor, QPainter, QFont, QPen
+from ui.ui_splash_screen import Ui_SplashScreen
 counter = 0
 
 
-class CircularProgress(QtWidgets.QWidget):
+class CircularProgress(QWidget):
     def __init__(self):
-        QtWidgets.QWidget.__init__(self)
+        QWidget.__init__(self)
         self.value = 0
         self.width = 270
         self.height = 270
         self.progress_width = 10
         self.progress_rounded_cap = True
-        self.progress_color = QtGui.QColor(255, 200, 200)
+        self.progress_color = QColor(255, 200, 200)
         self.max_value = 100
         self.font_family = "Biennal Black"
         self.font_size = 40
         self.siffix = "%"
-        self.text_color = QtGui.QColor(255, 200, 200)
+        self.text_color = QColor(255, 200, 200)
         self.resize(self.width, self.height)
 
-        self.shadow = QtWidgets.QGraphicsDropShadowEffect(self)
+        self.shadow = QGraphicsDropShadowEffect(self)
         self.shadow.setBlurRadius(15)
         self.shadow.setXOffset(0)
         self.shadow.setYOffset(0)
-        self.shadow.setColor(QtGui.QColor(0, 0, 0, 120))
+        self.shadow.setColor(QColor(0, 0, 0, 120))
         self.setGraphicsEffect(self.shadow)
 
     def set_value(self, value):
@@ -37,56 +38,59 @@ class CircularProgress(QtWidgets.QWidget):
         margin = self.progress_width / 2
         value = self.value * 360 / self.max_value
 
-        paint = QtGui.QPainter()
+        paint = QPainter()
         paint.begin(self)
-        paint.setRenderHint(QtGui.QPainter.RenderHint.Antialiasing)
-        paint.setFont(QtGui.QFont(self.font_family, self.font_size))
+        paint.setRenderHint(QPainter.RenderHint.Antialiasing)
+        paint.setFont(QFont(self.font_family, self.font_size))
 
-        pen = QtGui.QPen()
-        pen.setColor(QtGui.QColor(self.progress_color))
+        pen = QPen()
+        pen.setColor(QColor(self.progress_color))
         pen.setWidth(self.progress_width)
         if self.progress_rounded_cap:
-            pen.setCapStyle(QtCore.Qt.RoundCap)
+            pen.setCapStyle(Qt.RoundCap)
         paint.setPen(pen)
         paint.drawArc(int(margin), int(margin), int(width),
                       int(height), -90*16, int(-value * 16))
-        rect = QtCore.QRect(0, 0, self.width, self.height)
-        paint.setPen(QtCore.Qt.PenStyle.NoPen)
+        rect = QRect(0, 0, self.width, self.height)
+        paint.setPen(Qt.PenStyle.NoPen)
         paint.drawRect(rect)
-        pen.setColor(QtGui.QColor(self.text_color))
+        pen.setColor(QColor(self.text_color))
         paint.setPen(pen)
-        paint.drawText(rect, QtCore.Qt.AlignmentFlag.AlignCenter,
+        paint.drawText(rect, Qt.AlignmentFlag.AlignCenter,
                        f"{self.value}{self.siffix}")
         paint.end()
 
 
-class SplashScreen(QtWidgets.QMainWindow):
-    def __init__(self, parent=None):
-        QtWidgets.QMainWindow.__init__(self)
+class SplashScreen(QMainWindow):
+    singal_show = pyqtSignal()
+
+    def __init__(self, ver: str, mode: str):
+        QMainWindow.__init__(
+            self, flags=Qt.WindowType.FramelessWindowHint | Qt.WindowType.SplashScreen)
         self.ui = Ui_SplashScreen()
         self.ui.setupUi(self)
-        self.setWindowFlags(
-            QtCore.Qt.WindowType.FramelessWindowHint | QtCore.Qt.WindowType.SplashScreen)
-        self.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground)
+        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+        self.mode = mode
+        self.ui.l_version.setText(ver)
 
         self.progress = CircularProgress()
         self.progress.setParent(self.ui.centralwidget)
         self.progress.move(15, 15)
 
-        self.shadow = QtWidgets.QGraphicsDropShadowEffect(self)
+        self.shadow = QGraphicsDropShadowEffect(self)
         self.shadow.setBlurRadius(15)
         self.shadow.setXOffset(0)
         self.shadow.setYOffset(0)
-        self.shadow.setColor(QtGui.QColor(0, 0, 0, 120))
+        self.shadow.setColor(QColor(255, 255, 255, 255))
         self.setGraphicsEffect(self.shadow)
 
-        self.timer = QtCore.QTimer()
-        self.timer.timeout.connect(lambda: self.update(parent))
-
-    def showEvent(self, e):
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.update)
         self.timer.start(15)
 
-    def update(self, parent):
+        self.show()
+
+    def update(self):
         global counter
         self.progress.set_value(counter)
         if counter == 33:
@@ -97,6 +101,7 @@ class SplashScreen(QtWidgets.QMainWindow):
             self.ui.l_loading.setText("Loading...")
         elif counter >= 100:
             self.timer.stop()
-            parent.sh_self()
-            self.hide()
+            if self.mode == "0":
+                self.singal_show.emit()
+            self.close()
         counter += 1

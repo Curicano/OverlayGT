@@ -1,7 +1,6 @@
 from time import gmtime, strftime
 from PyQt5 import QtCore, QtWidgets
 from uptime import uptime
-from image import res
 from pyspeedtest import SpeedTest
 
 

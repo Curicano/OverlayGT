@@ -1,17 +1,9 @@
 <RCC>
   <qresource prefix="img">
-    <file>img_15.png</file>
-    <file>img_16.png</file>
-    <file>img_12.png</file>
-    <file>img_13.png</file>
-    <file>img_14.png</file>
-    <file>img_9.png</file>
-    <file>img_10.png</file>
-    <file>img_11.png</file>
-    <file>logo.ico</file>
+    <file>img_17.png</file>
+    <file>img_18.png</file>
     <file>img_0.png</file>
     <file>img_1.png</file>
-    <file>img_12.svg</file>
     <file>img_2.png</file>
     <file>img_3.png</file>
     <file>img_4.png</file>
@@ -19,5 +11,13 @@
     <file>img_6.png</file>
     <file>img_7.png</file>
     <file>img_8.png</file>
+    <file>img_9.png</file>
+    <file>img_10.png</file>
+    <file>img_11.png</file>
+    <file>img_12.png</file>
+    <file>img_13.png</file>
+    <file>img_14.png</file>
+    <file>img_15.png</file>
+    <file>img_16.png</file>
   </qresource>
 </RCC>

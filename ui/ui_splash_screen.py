@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'd:\Storage X\About\Programirovanie\Python\Git\OverlayGT 2.0\ui\splash_screen.ui'
+# Form implementation generated from reading ui file 'd:\Storage X\About\IT\Python\Git\OverlayGT 2.0\ui\splash_screen.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.7
 #

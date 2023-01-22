@@ -5,8 +5,8 @@ Line {
     border: none;
     background: color255;
 }
-#f_menu, #AudioWidget, #line, #line_2, #MusicWidget, #SettingsWidget, #TranslitWidget, #tE_1, #tE_2, #VersionWidget, #TimeWidget, #container_1{
-    background-color: rgb(30, 30, 30);
+#f_menu, #AudioWidget, #line, #line_2, #SettingsWidget, #TranslitWidget, #tE_1, #tE_2, #VersionWidget, #TimeWidget, #container_1 {
+    background-color: rgb(22, 8, 23);
     border: 1px solid color255;
 	border-radius: 3px;
 }
@@ -36,6 +36,10 @@ QPushButton {
 QPushButton:hover {
 	background-color: color100;
 }
+QPushButton:pressed {
+    background: transparent;
+    border: 1px solid color255
+}
 QCheckBox:indicator {
 	width: 15px;
 	height: 15px;
@@ -53,7 +57,7 @@ QComboBox {
     color: rgb(255, 255, 255);
 }
 QComboBox QAbstractItemView {
-    background: rgb(30, 30, 30);
+    background: rgb(22, 8, 23);
     color: rgb(255, 255, 255);
     border: 1px solid color255;
     selection-background-color: color100;
@@ -80,14 +84,14 @@ QComboBox::down-arrow {
 	border: 1px solid color255;
 	background-color: transparent;
 }
-#btn_check_upd, #btn_save {
+#btn_check_upd, #btn_save, #btn_create_new_theme {
 	color: rgb(255, 255, 255);
 	border: 1px solid color255;
 	border-radius: 3px;
 }
 QMenu {
     color: rgb(255, 255, 255);
-    background: rgb(30, 30, 30);
+    background: rgb(22, 8, 23);
     border: 1px solid color255;
     margin: 2px;
 }
@@ -98,8 +102,14 @@ QMenu::separator {
     margin-right: 5px;
 }
 QMenu::item {
+    background: transparent;
     padding: 2px 25px 2px 20px;
-    border: 1px solid color255;
+}
+QMenu::item:hover {
+    background: color200;
+}
+QMenu::item:pressed {
+    background: color100;
 }
 QScrollBar:vertical {
 	border: none;
@@ -139,7 +149,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
 	background: transparent;
 	border: none;
 }
-#f_title, #f_title_2, #f_title_3, #f_speakers {
+#f_title, #f_speakers {
 	border: 1px solid;
 	border-bottom-color: color255;
 	border-right: none;
@@ -147,7 +157,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
 	border-top:none;
 }
 #qt_calendar_navigationbar {
-    background-color: rgb(30, 30, 30);
+    background-color: rgb(22, 8, 23);
     min-height: 40px;
 }
 #qt_calendar_prevmonth, #qt_calendar_nextmonth {
@@ -210,7 +220,33 @@ CalendarWidget QToolButton::menu-indicator {
 }
 #qt_calendar_calendarview {
 	color: white;
-	background: rgb(30, 30, 30);
+	background: rgb(22, 8, 23);
     outline: 0px;
     selection-background-color: color100;
+}
+QGroupBox {
+    background: transparent;
+    color: white;
+    border: 1px solid color255;
+    border-top-left-radius: 0px;
+	margin-top: 14px;
+}
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    padding: 0 3px;
+    background: rgb(22, 8, 23);
+    border: 1px solid color255;
+    border-radius: 3px;
+    border-bottom: 1px solid rgb(22, 8, 23);
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+QKeySequenceEdit QWidget {
+    background: rgb(22, 8, 23);
+    color: white;
+    border: 1px solid color255;
+}
+QKeySequenceEdit QWidget:hover {
+    background: color100;
 }

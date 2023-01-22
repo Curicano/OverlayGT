@@ -1,11 +1,13 @@
-from PyQt5 import QtWidgets, QtCore, QtGui
+from PyQt5.QtCore import QPoint, Qt, QEasingCurve, QPropertyAnimation, QParallelAnimationGroup, QTimer
+from PyQt5.QtWidgets import QStackedWidget
 
 
-class SlidingStackedWidget(QtWidgets.QStackedWidget):
+
+class SlidingStackedWidget(QStackedWidget):
     LEFT2RIGHT, RIGHT2LEFT, TOP2BOTTOM, BOTTOM2TOP, AUTOMATIC = range(5)
     def __init__(self, parent=None):
-        QtWidgets.QStackedWidget.__init__(self, parent=parent)
-        self._pnow = QtCore.QPoint(0, 0)
+        QStackedWidget.__init__(self, parent=parent)
+        self._pnow = QPoint(0, 0)
         # Скорость анимации
         self._speed = 2000
         # Текущий индекс
@@ -17,9 +19,9 @@ class SlidingStackedWidget(QtWidgets.QStackedWidget):
         # Включить
         self._active = 0
         # Анимация (по умолчанию - пейзаж)
-        self._orientation = QtCore.Qt.Horizontal
+        self._orientation = Qt.Orientation.Horizontal
         # Тип кривой анимации
-        self._easing = QtCore.QEasingCurve.Type.OutExpo
+        self._easing = QEasingCurve.Type.OutExpo
         self._initAnimation()
 
     def slideInIdx(self, idx, direction=4):
@@ -30,10 +32,10 @@ class SlidingStackedWidget(QtWidgets.QStackedWidget):
         :type direction:          int
         """
         if idx > self.count() - 1:
-            direction = self.TOP2BOTTOM if self._orientation == QtCore.Qt.Vertical else self.RIGHT2LEFT
+            direction = self.TOP2BOTTOM if self._orientation == Qt.Orientation.Vertical else self.RIGHT2LEFT
             idx = idx % self.count()
         elif idx < 0:
-            direction = self.BOTTOM2TOP if self._orientation == QtCore.Qt.Vertical else self.LEFT2RIGHT
+            direction = self.BOTTOM2TOP if self._orientation == Qt.Orientation.Vertical else self.LEFT2RIGHT
             idx = (idx + self.count()) % self.count()
         self.slideInWgt(self.widget(idx), direction)
 
@@ -58,9 +60,9 @@ class SlidingStackedWidget(QtWidgets.QStackedWidget):
 
         # Направление
         if _now < _next:
-            directionhint = self.TOP2BOTTOM if self._orientation == QtCore.Qt.Vertical else self.RIGHT2LEFT
+            directionhint = self.TOP2BOTTOM if self._orientation == Qt.Orientation.Vertical else self.RIGHT2LEFT
         else:
-            directionhint = self.BOTTOM2TOP if self._orientation == QtCore.Qt.Vertical else self.LEFT2RIGHT
+            directionhint = self.BOTTOM2TOP if self._orientation == Qt.Orientation.Vertical else self.LEFT2RIGHT
         if direction == self.AUTOMATIC:
             direction = directionhint
 
@@ -93,16 +95,16 @@ class SlidingStackedWidget(QtWidgets.QStackedWidget):
         self._animnow.setTargetObject(w_now)
         self._animnow.setDuration(self._speed)
         self._animnow.setEasingCurve(self._easing)
-        self._animnow.setStartValue(QtCore.QPoint(pnow.x(), pnow.y()))
+        self._animnow.setStartValue(QPoint(pnow.x(), pnow.y()))
         self._animnow.setEndValue(
-            QtCore.QPoint(offsetX + pnow.x(), offsetY + pnow.y()))
+            QPoint(offsetX + pnow.x(), offsetY + pnow.y()))
 
         self._animnext.setTargetObject(w_next)
         self._animnext.setDuration(self._speed)
         self._animnext.setEasingCurve(self._easing)
         self._animnext.setStartValue(
-            QtCore.QPoint(-offsetX + pnext.x(), offsetY + pnext.y()))
-        self._animnext.setEndValue(QtCore.QPoint(pnext.x(), pnext.y()))
+            QPoint(-offsetX + pnext.x(), offsetY + pnext.y()))
+        self._animnext.setEndValue(QPoint(pnext.x(), pnext.y()))
 
         self._next = _next
         self._now = _now
@@ -111,15 +113,15 @@ class SlidingStackedWidget(QtWidgets.QStackedWidget):
 
     def _initAnimation(self):
         # Текущая анимация страницы
-        self._animnow = QtCore.QPropertyAnimation(
+        self._animnow = QPropertyAnimation(
             self, propertyName=b'pos', duration=self._speed,
             easingCurve=self._easing)
         # Анимация следующей страницы
-        self._animnext = QtCore.QPropertyAnimation(
+        self._animnext = QPropertyAnimation(
             self, propertyName=b'pos', duration=self._speed,
             easingCurve=self._easing)
         # Группа параллельной анимации
-        self._animgroup = QtCore.QParallelAnimationGroup(
+        self._animgroup = QParallelAnimationGroup(
             self, finished=self.animationDoneSlot)
         self._animgroup.addAnimation(self._animnow)
         self._animgroup.addAnimation(self._animnext)
@@ -137,7 +139,7 @@ class SlidingStackedWidget(QtWidgets.QStackedWidget):
         """ Функция обработки конца анимации """
         # Поскольку метод setCurrentIndex перезаписан,
         # здесь используется метод самого родительского класса.
-        QtWidgets.QStackedWidget.setCurrentIndex(self, self._next)
+        QStackedWidget.setCurrentIndex(self, self._next)
         w = self.widget(self._now)
         w.hide()
         w.move(self._pnow)
@@ -146,7 +148,7 @@ class SlidingStackedWidget(QtWidgets.QStackedWidget):
 
     def autoStart(self, msec=5000):
         if not hasattr(self, '_autoTimer'):
-            self._autoTimer = QtCore.QTimer(self, timeout=self._autoStart)
+            self._autoTimer = QTimer(self, timeout=self._autoStart)
         self._autoTimer.stop()
         self._autoTimer.start(msec)
 

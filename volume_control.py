@@ -13,8 +13,6 @@ class V(AudioUtilities):
         self.interface = self.devices.Activate(
             IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
         self.volume = cast(self.interface, POINTER(IAudioEndpointVolume))
-        self.value = round((self.volume.GetMasterVolumeLevelScalar())*100)
-        return self.value
 
     def get_sessions(self):
         self.sess = self.GetAllSessions()

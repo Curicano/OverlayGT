@@ -1,4 +1,6 @@
 deen.py
 exe
 __pycache__
-Notes.txt
+.venv
+temp
+requirements.txt
