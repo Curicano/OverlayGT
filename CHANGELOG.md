@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-<!-- ## [0.0.0.4] - 2022- - -->
+## [0.0.0.4] - 2022-01-23
 
 ### Added
 - The mute\unmute buttons in the Audio tab change icons depending on the volume level.
